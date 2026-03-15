@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+.hero-section{
+height:80vh;
+background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+url("https://images.unsplash.com/photo-1506521781263-d8422e82f27a");
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
+}
+
+.hero-title{
+font-size:55px;
+font-weight:700;
+}
+
+.hero-text{
+font-size:20px;
+margin-top:10px;
+}
+
+.feature-card{
+padding:25px;
+border-radius:10px;
+background:white;
+box-shadow:0px 5px 20px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.feature-card:hover{
+transform:translateY(-8px);
+}
+
+.about-section{
+background:#0b2a5b;
+color:white;
+padding:60px 0;
+}
+
+.footer{
+background:#071a3c;
+color:white;
+text-align:center;
+padding:15px;
+}
+
+</style>
+
+
+<!-- HERO SECTION -->
+
+<section class="hero-section">
+
+<div>
+
+<h1 class="hero-title">Vehicle Vault</h1>
+
+<p class="hero-text">
+Smart Vehicle Parking Management System
+</p>
+
+<p>
+Manage Two-Wheeler and Four-Wheeler parking efficiently with
+secure entry tracking and organized parking slots.
+</p>
+
+
+</div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="container mt-5 mb-5 text-center">
+
+<h2 class="mb-5">System Features</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="feature-card">
+<h4>Vehicle Entry</h4>
+<p>
+Register vehicle number, owner name and vehicle type quickly
+during parking entry.
+</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="feature-card">
+<h4>Parking Slot Management</h4>
+<p>
+Automatically manage available slots for
+two-wheelers and four-wheelers.
+</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="feature-card">
+<h4>Vehicle Exit Tracking</h4>
+<p>
+Track vehicle exit time and maintain accurate
+parking history records.
+</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+
+
+{% endblock %}

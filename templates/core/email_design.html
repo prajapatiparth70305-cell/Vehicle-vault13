@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Vault — Email</title>
+    <style>
+      body { background-color: #2b2b94; margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+      .email-wrapper { max-width: 600px; margin: 0 auto; }
+    </style>
+  </head>
+  <body>
+    <center class="email-wrapper">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#ffffff;border-radius:8px;overflow:hidden;">
+        <tr>
+          <td style="padding:24px 24px 0 24px; text-align:center; background:#0b5ed7; color:#ffffff;">
+            <h1 style="margin:0;font-size:22px;">Vehicle Vault</h1>
+            <p style="margin:6px 0 0;font-size:14px;">Secure, simple vehicle management</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px;">
+            <p style="margin:0 0 12px;font-size:16px;">Hi {{ user_name }},</p>
+            <p style="margin:0 0 12px;font-size:15px;">{{ message }}</p>
+            <table role="presentation" cellspacing="0" cellpadding="0" style="margin:18px 0 24px;">
+              <tr>
+                <td align="center">
+                  <a href="{{ cta_url }}" style="background:#0b5ed7;color:#ffffff;padding:12px 20px;border-radius:6px;text-decoration:none;display:inline-block;font-weight:bold;">Open Vehicle Vault</a>
+                </td>
+              </tr>
+            </table>
+            <p style="color:#6b6b6b;font-size:13px;margin:0;">If you have any questions, reply to this email or visit our support page.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#f4f4f7;padding:16px 24px;text-align:center;color:#8a8a8a;font-size:12px;">
+            <p style="margin:0;">&copy; {% now "Y" %} Vehicle Vault. All rights reserved.</p>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
+</html>

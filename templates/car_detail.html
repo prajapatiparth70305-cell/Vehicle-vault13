@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Car Details</title>
+
+<style>
+
+body{
+background:#0b1c3a;
+font-family:Arial;
+color:white;
+}
+
+.container{
+width:60%;
+margin:auto;
+margin-top:40px;
+background:#1f3b73;
+padding:30px;
+border-radius:12px;
+box-shadow:0px 0px 10px rgba(0,0,0,0.4);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+.car-img{
+text-align:center;
+margin-bottom:20px;
+}
+
+.car-img img{
+width:300px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+table td{
+padding:12px;
+border-bottom:1px solid rgba(255,255,255,0.2);
+font-size:18px;
+}
+
+.label{
+font-weight:bold;
+width:40%;
+}
+
+.back-btn{
+margin-top:20px;
+display:inline-block;
+padding:10px 20px;
+background:white;
+color:black;
+text-decoration:none;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Car Details</h2>
+
+<div class="car-img">
+<img src="{{ car.image.url }}">
+</div>
+
+<table>
+
+<tr>
+<td class="label">Name</td>
+<td>{{ car.name }}</td>
+</tr>
+
+<tr>
+<td class="label">Brand</td>
+<td>{{ car.brand }}</td>
+</tr>
+
+<tr>
+<td class="label">Model</td>
+<td>{{ car.model }}</td>
+</tr>
+
+<tr>
+<td class="label">Car Number</td>
+<td>{{ car.car_number }}</td>
+</tr>
+
+<tr>
+<td class="label">Mileage</td>
+<td>{{ car.mileage }}</td>
+</tr>
+
+<tr>
+<td class="label">Fuel Type</td>
+<td>{{ car.fuel_type }}</td>
+</tr>
+
+<tr>
+<td class="label">Price</td>
+<td>₹ {{ car.price }}</td>
+</tr>
+
+<tr>
+<td class="label">Description</td>
+<td>{{ car.description }}</td>
+</tr>
+
+</table>
+
+<a href="/core/cars/" class="back-btn">Back</a>
+
+</div>
+
+</body>
+</html>

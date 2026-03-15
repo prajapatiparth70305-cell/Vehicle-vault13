@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compare Cars</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f6f9;
+            padding:40px;
+        }
+
+        .container{
+            max-width:900px;
+            margin:auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:25px;
+        }
+
+        select, button{
+            padding:10px;
+            margin:5px;
+            border-radius:6px;
+            border:1px solid #ccc;
+        }
+
+        button{
+            background:#007bff;
+            color:white;
+            border:none;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#0056b3;
+        }
+
+        table{
+            width:100%;
+            margin-top:20px;
+            border-collapse:collapse;
+        }
+
+        th{
+            background:#007bff;
+            color:white;
+            padding:10px;
+        }
+
+        td{
+            padding:10px;
+            text-align:center;
+            border-bottom:1px solid #ddd;
+        }
+
+        tr:hover{
+            background:#f1f1f1;
+        }
+    .exit-btn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    background: linear-gradient(45deg,#ff4d4d,#ff0000);
+    color:white;
+    padding:12px 25px;
+    border-radius:25px;
+    text-decoration:none;
+    font-size:16px;
+    font-weight:bold;
+    box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    transition:all 0.3s ease;
+}
+
+/* Hover animation */
+.exit-btn:hover{
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 10px 20px rgba(0,0,0,0.4);
+}
+
+/* Click animation */
+.exit-btn:active{
+    transform:scale(0.95);
+}
+  
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🚗 Compare Cars</h2>
+
+<form method="get">
+    <select name="car1">
+        {% for car in cars %}
+        <option value="{{car.id}}">{{car.name}}</option>
+        {% endfor %}
+    </select>
+
+    <select name="car2">
+        {% for car in cars %}
+        <option value="{{car.id}}">{{car.name}}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Compare</button>
+</form>
+
+{% if car1 and car2 %}
+
+<table>
+<tr>
+<th>Feature</th>
+<th>{{car1.name}}</th>
+<th>{{car2.name}}</th>
+</tr>
+
+<tr>
+<td>Brand</td>
+<td>{{car1.brand}}</td>
+<td>{{car2.brand}}</td>
+</tr>
+
+<tr>
+<td>Price</td>
+<td>{{car1.price}}</td>
+<td>{{car2.price}}</td>
+</tr>
+
+<tr>
+<td>Model</td>
+<td>{{car1.model}}</td>
+<td>{{car2.model}}</td>
+</tr>
+
+<tr>
+<td>Mileage</td>
+<td>{{car1.mileage}}</td>
+<td>{{car2.mileage}}</td>
+</tr>
+
+<tr>
+<td>Fuel Type</td>
+<td>{{car1.fuel_type}}</td>
+<td>{{car2.fuel_type}}</td>
+</tr>
+
+</table>
+
+{% endif %}
+</div>
+<div>
+<a href="{% url 'home' %}" class="exit-btn">❌ Exit</a>
+</div>
+
+</body>
+</html>

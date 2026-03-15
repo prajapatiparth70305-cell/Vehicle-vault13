@@ -1,0 +1,34 @@
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-section">
+            <h3>Vehicle Vault</h3>
+            <p>Secure vehicle parking management system for two-wheelers and four-wheelers.</p>
+        </div>
+
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'signup' %}">Signup</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h4>Contact</h4>
+            <p>Email: support@vehiclevault.com</p>
+            <p>Phone: +91 XXXXX XXXXX</p>
+            <p>Location: India</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Vehicle Vault | All Rights Reserved</p>
+    </div>
+</footer>

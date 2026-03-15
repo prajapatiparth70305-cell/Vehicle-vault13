@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vehicle Vault Dashboard</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f4f6f9;
+        }
+
+        .container{
+            display:flex;
+        }
+
+        /* Sidebar */
+        .sidebar{
+            width:220px;
+            height:100vh;
+            background:linear-gradient(180deg,#1d3557,#457b9d);
+            padding-top:20px;
+            color:white;
+        }
+
+        .sidebar h2{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .sidebar a{
+            display:block;
+            padding:12px 20px;
+            color:white;
+            text-decoration:none;
+            font-size:16px;
+            transition:0.3s;
+        }
+
+        .sidebar a:hover{
+            background:#ffffff;
+            color:#1d3557;
+            border-radius:5px;
+        }
+
+        /* Main Content */
+
+        .main{
+            flex:1;
+            padding:30px;
+        }
+
+        .cards{
+            display:flex;
+            gap:20px;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            width:200px;
+            border-radius:8px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h2>Vehicle Vault</h2>
+
+        <a href="{% url 'dashboard' %}">Home</a>
+        <a href="{% url 'cars' %}">Cars</a>
+        <a href="{% url 'compare' %}">Compare</a>
+        <a href="{% url 'testdrive' %}">TestDrive</a>
+        <a href="{% url 'logout' %}">Logout</a>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="main">
+        <h2>Dashboard</h2>
+        <h2>Welcome {{request.user.email}}</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Vehicles</h3>
+                <p></p>
+            </div>
+
+       
