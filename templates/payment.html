@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f9;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .amount {
+            font-size: 28px;
+            color: green;
+            margin: 15px 0;
+        }
+
+        .pay-btn {
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 114, 255, 0.6);
+        }
+
+        .car-name {
+            color: #333;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>🚗 Car Booking</h2>
+
+    <div class="car-name">
+        {{ car.name }}
+    </div>
+
+    <div class="amount">
+        ₹ {{ amount }}
+    </div>
+
+    <button id="pay-btn" class="pay-btn">
+        💳 Pay Now
+    </button>
+
+</div>
+
+<script>
+var options = {
+    "key": "rzp_test_SRMYrgg9z1ynoY",  // apni key daalo
+    "amount": "{{ payment.amount }}",
+    "currency": "INR",
+    "name": "Vehicle Vault",
+    "description": "Car Booking",
+    "order_id": "{{ payment.id }}",
+
+    "handler": function (response){
+        window.location.href = "/success/";
+    }
+};
+
+var rzp1 = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

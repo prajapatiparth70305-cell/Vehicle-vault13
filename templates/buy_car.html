@@ -1,0 +1,118 @@
+<style>
+    body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #1e293b, #020617);
+    color: white;
+}
+
+/* Center everything */
+.main {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glass Card */
+.card {
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* LEFT */
+.left {
+    text-align: center;
+}
+
+.car-img {
+    width: 350px;
+    transition: 0.3s;
+}
+
+.car-img:hover {
+    transform: scale(1.08);
+}
+
+.left h2 {
+    margin-top: 15px;
+}
+
+.left h3 {
+    color: #22c55e;
+}
+
+/* RIGHT */
+.right {
+    width: 300px;
+}
+
+.right h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+.right input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+/* Button */
+.right button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.right button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(34,197,94,0.5);
+}
+</style>
+    <div class="main">
+
+    <div class="card">
+
+        <div class="left">
+            <img src="{{ car.image.url }}" class="car-img">
+
+            <h2>{{ car.name }}</h2>
+            <h3>₹{{ car.price }}</h3>
+        </div>
+
+   
+        <div class="right">
+            <h2>Enter Details</h2>
+
+            <form method="POST" >
+                {% csrf_token %}
+
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="text" name="address" placeholder="Address" required>
+                <input type="text" name="phone" placeholder="Phone" required>
+
+                <button type="submit">Proceed to Payment →</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>

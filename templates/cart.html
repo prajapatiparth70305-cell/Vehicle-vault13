@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cart</title>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            font-family: Arial;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .cart-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .cart-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        .cart-card:hover {
+            transform: scale(1.02);
+        }
+
+        .price {
+            color: #22c55e;
+            font-size: 18px;
+            margin: 8px 0;
+        }
+
+        .btn-group {
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            margin-right: 8px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+        }
+
+        .buy {
+            background: #16a34a;
+        }
+
+        .emi {
+            background: #f59e0b;
+        }
+
+        .remove {
+            background: #dc2626;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .empty {
+            text-align: center;
+            margin-top: 50px;
+            color: #94a3b8;
+        }
+    </style>
+
+</head>
+<body>
+
+<h2>Your Cart 🛒</h2>
+
+<div class="cart-container">
+
+{% for item in cart_items %}
+
+<div class="cart-card">
+    <h3>{{ item.car.name }}</h3>
+    <p class="price">₹ {{ item.car.price }}</p>
+
+    <div class="btn-group">
+        <a href="{% url 'buy_car' item.car.id %}" class="btn buy">🚗 Buy</a>
+        <a href="{% url 'emi_calculator' item.car.id %}" class="btn emi">💰 EMI</a>
+        <a href="{% url 'remove_from_cart' item.id %}" class="btn remove"
+           onclick="return confirm('Remove this item?')">❌ Remove</a>
+    </div>
+</div>
+
+{% empty %}
+<p class="empty">Your cart is empty 😢</p>
+{% endfor %}
+
+</div>
+
+</body>
+</html>

@@ -93,13 +93,50 @@ class Car(models.Model):
     price = models.IntegerField()
     mileage = models.FloatField(null=True)
     image = models.ImageField(upload_to='cars/')
+    seats = models.IntegerField(null=True, blank=True)
+    features = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.name
+    
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def _str_(self):
+        return f"{self.user} - {self.car}"
     
 class CarComparison(models.Model):
     car1 = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="car1")
     car2 = models.ForeignKey(Car, on_delete=models.CASCADE, related_name="car2")
     compared_at = models.DateTimeField(auto_now_add=True)
 
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    car = models.ForeignKey('Car', on_delete=models.CASCADE,null=True)
+    amount = models.IntegerField(null=True,blank=True)
+    payment_id = models.CharField(max_length=200,null=True)
+    status = models.CharField(max_length=50,null=True)
+    date = models.DateTimeField(auto_now_add=True,null=True)
 
+    def _str_(self):
+        return self.car_name
+
+
+    
+
+class Invoice(models.Model):
+
+
+    car = models.ForeignKey('Car', on_delete=models.CASCADE)
+    purchase = models.ForeignKey('Purchase', on_delete=models.CASCADE)
+
+    invoice_number = models.CharField(max_length=100)
+    amount = models.IntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.invoice_number

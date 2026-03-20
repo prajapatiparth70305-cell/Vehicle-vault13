@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Invoice</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI', sans-serif;
+background: linear-gradient(135deg,#667eea,#764ba2);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.invoice-box{
+background:white;
+width:420px;
+padding:30px;
+border-radius:15px;
+box-shadow:0 15px 35px rgba(0,0,0,0.2);
+animation:fadeIn 0.5s ease;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+margin:10px 0;
+font-size:15px;
+}
+
+.label{
+color:#555;
+font-weight:500;
+}
+
+.value{
+font-weight:bold;
+color:#222;
+}
+
+.status{
+color:#27ae60;
+font-weight:bold;
+}
+
+.line{
+height:1px;
+background:#eee;
+margin:15px 0;
+}
+
+/* Buttons */
+
+.btn{
+display:block;
+text-align:center;
+margin-top:15px;
+padding:10px;
+border-radius:8px;
+text-decoration:none;
+color:white;
+}
+
+.back-btn{
+background:#3498db;
+}
+
+.print-btn{
+background:#2ecc71;
+}
+
+.back-btn:hover{
+background:#2980b9;
+}
+
+.print-btn:hover{
+background:#27ae60;
+}
+
+/* Animation */
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="invoice-box">
+
+<h2>🧾 Invoice</h2>
+
+<div class="row">
+<span class="label">Car</span>
+<span class="value">{{purchase.car.name}}</span>
+</div>
+
+<div class="row">
+<span class="label">Amount</span>
+<span class="value">₹{{purchase.amount}}</span>
+</div>
+
+<div class="row">
+<span class="label">Payment ID</span>
+<span class="value">{{purchase.payment_id}}</span>
+</div>
+
+<div class="row">
+<span class="label">Status</span>
+<span class="status">{{purchase.status}}</span>
+</div>
+
+<div class="row">
+<span class="label">Date</span>
+<span class="value">{{purchase.date}}</span>
+</div>
+
+<div class="line"></div>
+
+<a href="/core/purchase_history/" class="btn back-btn">
+⬅ Back to History
+</a>
+
+<a href="#" onclick="window.print()" class="btn print-btn">
+🖨 Print Invoice
+</a>
+
+</div>
+
+</body>
+</html>

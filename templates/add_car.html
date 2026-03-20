@@ -62,7 +62,7 @@ cursor:pointer;
 
 <h2>Add New Car</h2>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" action="{%url 'add_car' %}" enctype="multipart/form-data">
 
 {% csrf_token %}
 
@@ -79,10 +79,6 @@ cursor:pointer;
 <td><input type="text" name="brand"></td>
 </tr>
 
-<tr>
-<td>Model</td>
-<td><input type="text" name="model"></td>
-</tr>
 
 <tr>
 <td>Car Number</td>
@@ -116,10 +112,7 @@ cursor:pointer;
 <td><input type="file" name="image"></td>
 </tr>
 
-<tr>
-<td>Description</td>
-<td><textarea name="description"></textarea></td>
-</tr>
+
 
 </table>
 

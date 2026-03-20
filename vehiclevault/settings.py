@@ -150,3 +150,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'xxyz33301@gmail.com'
 EMAIL_HOST_PASSWORD = 'tfzr pmlf lyws llpo' #app password
+
+RAZORPAY_KEY_ID="rzp_test_SRMYrgg9z1ynoY"
+RAZORPAY_KEY_SECRET="H8Fzo9bxZA2Kh5LmFFiToIb3"

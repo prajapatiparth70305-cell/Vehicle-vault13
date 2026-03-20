@@ -8,8 +8,10 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import Car
+from .models import Car,Purchase,Invoice,Cart
 from .forms import CarForm, TestDrive
+from django.http import HttpResponse
+import razorpay
 def home(request):
     return render(request,'home.html')
 
@@ -75,14 +77,104 @@ def car_detail(request,id):
 
 def add_car(request):
     if request.method == "POST":
-        form = CarForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('cars')
-    else:
-        form = CarForm()
+        name = request.POST.get('name')
+        brand = request.POST.get('brand')
+        number = request.POST.get('number')
+        mileage = request.POST.get('mileage')
+        fuel_type = request.POST.get('fuel_type')
+        price = request.POST.get('price')
+        image = request.FILES.get('image')
+        
 
-    return render(request,'add_car.html',{'form':form})
+        Car.objects.create(
+            name=name,
+            brand=brand,
+            number=number,
+            mileage=mileage,
+            fuel_type=fuel_type,
+            price=price,
+            image=image,
+        
+        )
+
+        return redirect('cars')   # yaha redirect hona chahiye
+
+    return render(request, 'add_car.html')
+
+
+
+def buy_car(request, id):
+    car = get_object_or_404(Car, id=id)
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        address = request.POST.get('address')
+        phone = request.POST.get('phone')
+
+        client = razorpay.Client(auth=("rzp_test_SRMYrgg9z1ynoY", "H8Fzo9bxZA2Kh5LmFFiToIb3"))
+        booking_amount=car.price
+        amount = int(booking_amount*1)
+
+        payment = client.order.create({
+            "amount": amount,
+            "currency": "INR",
+            "payment_capture": 1
+        })
+
+        return render(request, 'payment.html', {
+            'payment': payment,
+            'car': car,
+            'name': name,
+            'phone': phone,
+            'amount':booking_amount
+            
+        })
+
+    return render(request, 'buy_car.html', {'car': car})
+
+
+
+def payment_success(request):
+
+    car_id = request.session.get('car_id')
+
+    car = get_object_or_404(Car, id=car_id)
+
+ 
+    payment_id = request.GET.get('payment_id', 'PAY123456')
+
+    Purchase.objects.create(
+        user=request.user,
+        car=car,
+        amount=car.price,
+        status="Success",
+        payment_id=payment_id
+    )
+
+    return redirect('purchase_history')
+
+
+def purchase_history(request):
+
+    purchases = Purchase.objects.filter(user=request.user)
+
+    return render(request,"purchase_history.html",{
+        "purchases":purchases
+    })
+
+def delete_purchase(request, id):
+    purchase = Purchase.objects.get(id=id)  # small letter variable
+    purchase.delete()
+    return redirect('purchase_history')
+
+
+def invoice(request,id):
+
+    purchase = Purchase.objects.get(id=id)
+
+    return render(request,"invoice.html",{
+        "purchase":purchase
+    })
 
 def compare(request):
     cars = Car.objects.all()
@@ -128,3 +220,33 @@ def testdrive(request):
         return render(request,'testdrive.html',{'success':True})
        
     return render(request,'testdrive.html')
+
+
+def emi_calculator(request, id):
+    car = Car.objects.get(id=id)
+    return render(request, 'emi_page.html', {'car': car})
+
+@login_required
+
+def add_to_cart(request, id):
+    car = get_object_or_404(Car, id=id)  
+
+    Cart.objects.create(
+        user=request.user,
+        car=car
+    )
+
+    return redirect('cart_page')
+
+@login_required
+def cart_page(request):
+    cart_items = Cart.objects.filter(user=request.user)
+    return render(request, 'cart.html', {'cart_items': cart_items})
+
+
+
+def remove_from_cart(request, id):
+    item = get_object_or_404(Cart, id=id)
+    item.delete()
+    return redirect('cars')
+

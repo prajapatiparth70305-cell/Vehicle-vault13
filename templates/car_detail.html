@@ -1,127 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Car Details</title>
-
-<style>
-
-body{
-background:#0b1c3a;
-font-family:Arial;
-color:white;
+    <title>Car Details</title>
+    <style>
+        body {
+    background: linear-gradient(135deg, #0f2027, #2c5364);
+    font-family: 'Poppins', sans-serif;
+    color: white;
 }
 
-.container{
-width:60%;
-margin:auto;
-margin-top:40px;
-background:#1f3b73;
-padding:30px;
-border-radius:12px;
-box-shadow:0px 0px 10px rgba(0,0,0,0.4);
+.page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
 }
 
-h2{
-text-align:center;
-margin-bottom:20px;
+.car-card {
+    width: 900px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    text-align: center;
 }
 
-.car-img{
-text-align:center;
-margin-bottom:20px;
+.car-image img {
+    width: 300px;
+    transition: 0.3s;
 }
 
-.car-img img{
-width:300px;
+.car-image img:hover {
+    transform: scale(1.05);
 }
 
-table{
-width:100%;
-border-collapse:collapse;
+.car-details {
+    margin-top: 20px;
 }
 
-table td{
-padding:12px;
-border-bottom:1px solid rgba(255,255,255,0.2);
-font-size:18px;
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.label{
-font-weight:bold;
-width:40%;
+.row span:first-child {
+    color: #ccc;
 }
 
-.back-btn{
-margin-top:20px;
-display:inline-block;
-padding:10px 20px;
-background:white;
-color:black;
-text-decoration:none;
-border-radius:6px;
+.row span:last-child {
+    font-weight: bold;
 }
 
+.btn-group {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn.buy {
+    background: linear-gradient(45deg, #00c853, #64dd17);
+}
+
+.btn.emi {
+    background: linear-gradient(45deg, #ff9800, #ff5722);
+}
+
+.btn.cart {
+    background: linear-gradient(45deg, #2196f3, #00bcd4);
+}
+
+.btn.view {
+    background: linear-gradient(45deg, #9c27b0, #673ab7);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
 </style>
 
-</head>
+<div class="page-container">
 
-<body>
+    <div class="car-card">
 
-<div class="container">
+        <h2>🚗 Car Details</h2>
 
-<h2>Car Details</h2>
+        <div class="car-image">
+            <img src="{{ car.image.url }}" alt="car">
+        </div>
 
-<div class="car-img">
-<img src="{{ car.image.url }}">
-</div>
+        <div class="car-details">
+            <div class="row"><span>Name</span><span>{{ car.name }}</span></div>
+            <div class="row"><span>Brand</span><span>{{ car.brand }}</span></div>
+            <div class="row"><span>Model</span><span>{{ car.model }}</span></div>
+            <div class="row"><span>Mileage</span><span>{{ car.mileage }}</span></div>
+            <div class="row"><span>Fuel Type</span><span>{{ car.fuel_type }}</span></div>
+            <div class="row"><span>Price</span><span>₹ {{ car.price }}</span></div>
+            <div class="row"><span>Description</span><span>{{ car.description }}</span></div>
+        </div>
 
-<table>
+       
+        <div class="btn-group">
 
-<tr>
-<td class="label">Name</td>
-<td>{{ car.name }}</td>
-</tr>
+            <a href="{% url 'add_to_cart' car.id %}" class="btn cart">🛒Add To Cart</a>
+            <a href="{% url 'cars' %}" class="btn view">🔙 Back</a>
 
-<tr>
-<td class="label">Brand</td>
-<td>{{ car.brand }}</td>
-</tr>
+        </div>
 
-<tr>
-<td class="label">Model</td>
-<td>{{ car.model }}</td>
-</tr>
-
-<tr>
-<td class="label">Car Number</td>
-<td>{{ car.car_number }}</td>
-</tr>
-
-<tr>
-<td class="label">Mileage</td>
-<td>{{ car.mileage }}</td>
-</tr>
-
-<tr>
-<td class="label">Fuel Type</td>
-<td>{{ car.fuel_type }}</td>
-</tr>
-
-<tr>
-<td class="label">Price</td>
-<td>₹ {{ car.price }}</td>
-</tr>
-
-<tr>
-<td class="label">Description</td>
-<td>{{ car.description }}</td>
-</tr>
-
-</table>
-
-<a href="/core/cars/" class="back-btn">Back</a>
+    </div>
 
 </div>
-
-</body>
-</html>
