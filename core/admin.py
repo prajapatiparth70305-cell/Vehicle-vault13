@@ -7,3 +7,4 @@ from .models import Car,Purchase,Invoice
 admin.site.register(Car)
 admin.site.register(Purchase)
 admin.site.register(Invoice)
+

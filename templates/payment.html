@@ -87,7 +87,7 @@ var options = {
     "order_id": "{{ payment.id }}",
 
     "handler": function (response){
-        window.location.href = "/success/";
+        window.location.href = "/core/payment-success/{{ car.id }}?amount={{ amount }}";
     }
 };
 

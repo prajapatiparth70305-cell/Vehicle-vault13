@@ -69,13 +69,17 @@ color:#007bff;
 
 <form method="POST">
 
-{% csrf_token %}
+    {% csrf_token %}
 
 <input type="text" name="username" placeholder="Enter Username" required>
 
 <input type="password" name="password" placeholder="Enter Password" required>
 
 <button type="submit">Login</button>
+<a href="{% url 'forgot_password' %}" class="forgot-btn">
+    Forgot Password?
+</a>
+
 
 </form>
 
