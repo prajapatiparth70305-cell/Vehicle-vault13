@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMI Success</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #0f2027, #2c5364);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.success-icon {
+    font-size: 60px;
+    color: #28a745;
+}
+
+h2 {
+    margin-top: 10px;
+    color: #333;
+}
+
+p {
+    color: #666;
+    margin: 10px 0;
+}
+
+.btn {
+    margin-top: 20px;
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(to right, #36d1dc, #5b86e5);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.btn:hover {
+    opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="success-icon">✅</div>
+
+    <h2>Payment Successful</h2>
+
+    <p>Your EMI plan has been activated successfully.</p>
+
+    <p>Thank you for choosing Car 🚗</p>
+
+    <!-- Buttons -->
+    <a href="/core/history/" class="btn">View EMI History</a>
+
+    <a href="/core/cars/" class="btn">Go to Dashboard</a>
+
+</div>
+
+</body>
+</html>

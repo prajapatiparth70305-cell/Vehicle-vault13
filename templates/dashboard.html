@@ -1,102 +1,222 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Vehicle Vault Dashboard</title>
+    <title>Dashboard</title>
 
     <style>
-
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#f4f6f9;
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
         }
 
-        .container{
-            display:flex;
+        .container {
+            display: flex;
         }
 
-        /* Sidebar */
-        .sidebar{
-            width:220px;
-            height:100vh;
-            background:linear-gradient(180deg,#1d3557,#457b9d);
-            padding-top:20px;
-            color:white;
+        /* 🔵 SIDEBAR */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 20px;
         }
 
-        .sidebar h2{
-            text-align:center;
-            margin-bottom:30px;
+        .sidebar h2 {
+            margin-bottom: 30px;
         }
 
-        .sidebar a{
-            display:block;
-            padding:12px 20px;
-            color:white;
-            text-decoration:none;
-            font-size:16px;
-            transition:0.3s;
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: 0.3s;
         }
 
-        .sidebar a:hover{
-            background:#ffffff;
-            color:#1d3557;
-            border-radius:5px;
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(5px);
         }
 
-        /* Main Content */
-
-        .main{
-            flex:1;
-            padding:30px;
+        /* 🟡 MAIN */
+        .main {
+            flex: 1;
+            padding: 30px;
+            color: white;
         }
 
-        .cards{
-            display:flex;
-            gap:20px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .card{
-            background:white;
-            padding:20px;
-            width:200px;
-            border-radius:8px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        .welcome {
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        /* 🔔 Bell */
+        .bell {
+            position: relative;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 3px 6px;
+            font-size: 10px;
+        }
+
+        /* 🧾 CARDS */
+        .cards {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 15px;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        .card p {
+            font-size: 30px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: white;
+        }
+
+        /* 💎 EXTRA SECTION */
+        .extra {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .box {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
 
     </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- Sidebar -->
-
+    <!-- 🔵 SIDEBAR -->
     <div class="sidebar">
+        <h2>🚗 Vehicle Vault</h2>
 
-        <h2>Vehicle Vault</h2>
-
-        <a href="{% url 'dashboard' %}">Home</a>
-        <a href="{% url 'cars' %}">Cars</a>
-        <a href="{% url 'compare' %}">Compare</a>
-        <a href="{% url 'testdrive' %}">TestDrive</a>
-        <a href="{% url 'logout' %}">Logout</a>
-
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <a href="{% url 'cars' %}">🚘 Cars</a>
+        <a href="{% url 'compare' %}">⚖ Compare</a>
+        <a href="{% url 'testdrive' %}">🧪 Test Drive</a>
+        <a href="{% url 'notifications' %}">🔔 Notifications</a>
+        <a href="{% url 'logout' %}">🚪 Logout</a>
     </div>
 
-    <!-- Main Content -->
-
+    
     <div class="main">
-        <h2>Dashboard</h2>
-        <h2>Welcome {{request.user.email}}</h2>
+
+        <!-- HEADER -->
+        <div class="header">
+            <div class="welcome">
+                Welcome, {{ request.user.username }}
+            </div>
+
+            <div class="bell">
+                <a href="{% url 'notifications' %}" style="color:white;">
+                    🔔
+                    {% if unread_count > 0 %}
+                        <span class="badge">{{ unread_count }}</span>
+                    {% endif %}
+                </a>
+            </div>
+        </div>
+
 
         <div class="cards">
 
-            <div class="card">
-                <h3>Total Vehicles</h3>
-                <p></p>
+            <a href="{% url 'cars' %}" class="card-link">
+                <div class="card">
+                    <h3>Total Cars</h3>
+                    <p>{{ total_cars }}</p>
+                </div>
+            </a>
+
+            <a href="{% url 'purchase_history' %}" class="card-link">
+                <div class="card">
+                    <h3>Purchased Cars</h3>
+                    <p>{{ purchased_cars }}</p>
+                </div>
+            </a>
+
+            <a href="{% url 'insurance_history' %}" class="card-link">
+                <div class="card">
+                    <h3>Insurance Active</h3>
+                    <p>{{ insurance_active }}</p>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- 💎 EXTRA SECTION -->
+        <div class="extra">
+
+            <div class="box">
+                <h3>📢 Latest Activity</h3>
+                <p>✔ Car purchased</p>
+                <p>✔ Insurance added</p>
             </div>
 
-       
+            <div class="box">
+                <h3>⚡ Quick Actions</h3>
+                <p><a href="{% url 'cars' %}" style="color:white;">+ Add Car</a></p>
+                <p><a href="{% url 'notifications' %}" style="color:white;">View Notifications</a></p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

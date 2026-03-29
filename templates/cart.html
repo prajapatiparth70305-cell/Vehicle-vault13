@@ -94,7 +94,9 @@
 
     <div class="btn-group">
         <a href="{% url 'buy_car' item.car.id %}" class="btn buy">🚗 Buy</a>
-        <a href="{% url 'emi_calculator' item.car.id %}" class="btn emi">💰 EMI</a>
+          <a href="{% url 'emi' %}?car={{ item.car.name }}&price={{ item.car.price }}" class="btn emi">
+        💳 Buy on EMI
+    </a>
         <a href="{% url 'remove_from_cart' item.id %}" class="btn remove"
            onclick="return confirm('Remove this item?')">❌ Remove</a>
     </div>

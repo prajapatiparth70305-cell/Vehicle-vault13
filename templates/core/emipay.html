@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pay EMI</title>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.container {
+    background: rgba(255,255,255,0.08);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    text-align: center;
+    width: 350px;
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity:0; transform:translateY(20px);}
+    to {opacity:1; transform:translateY(0);}
+}
+
+.icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.amount {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 15px 0;
+    color: #00e676;
+}
+
+.desc {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #00c853, #00e676);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00e676;
+}
+
+.back {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 13px;
+    color: #aaa;
+    text-decoration: none;
+}
+
+.back:hover {
+    color: white;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="icon">💳</div>
+
+    <h2>Pay EMI</h2>
+
+    <div class="amount">₹{{ emi.amount }}</div>
+
+    <div class="desc">Secure payment powered by Razorpay</div>
+
+    <button id="pay-btn" class="btn">Pay Now</button>
+
+    <a href="/core/history/" class="back">⬅ Back to History</a>
+
+</div>
+
+
+<button id="pay-btn">Pay Now</button>
+
+<script>
+var options = {
+    "key": "rzp_test_SRMYrgg9z1ynoY",
+    "amount": "{{ payment.amount }}",
+    "currency": "INR",
+    "name": "Vehicle Vault",
+    "description": "Next EMI Payment",
+    "order_id": "{{ payment.id }}",
+
+    "handler": function (response){
+        var url = "/core/success/?payment_id="
+            + response.razorpay_payment_id
+            + "&amount={{ emi.amount }}";
+
+        console.log("Redirect URL:", url);
+
+        window.location.href = url;
+    },
+
+    "theme": {
+        "color": "#00c853"
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

@@ -122,6 +122,8 @@ class Purchase(models.Model):
     status = models.CharField(max_length=50,null=True)
     date = models.DateTimeField(auto_now_add=True,null=True)
 
+    is_insurance = models.BooleanField(default=False,null=True)
+    insurance_plan = models.CharField(max_length=50, null=True, blank=True)
     def _str_(self):
         return self.car_name
 
@@ -141,5 +143,29 @@ class Invoice(models.Model):
 
     def __str__(self):
         return self.invoice_number
-  
+    
+class Notification(models.Model):
+    NOTIFICATION_TYPES = (
+        ('info', 'Info'),
+        ('warning', 'Warning'),
+        ('success', 'Success'),
+    )
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.TextField()
+    notification_type = models.CharField(max_length=10, choices=NOTIFICATION_TYPES, default='info')
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def _str_(self):
+        return f"{self.user.username} - {self.message[:20]}"
+ 
+
+class EMIHistory(models.Model):
+    payment_id = models.CharField(max_length=200)
+    amount = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+    car_name=models.CharField(max_length=100,null=True)
+
+    def _str_(self):
+        return self.payment_id 

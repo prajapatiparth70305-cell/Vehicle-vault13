@@ -1,27 +1,88 @@
-{% extends 'base.html' %}
+{% extends 'auth_base.html' %}
 {% load crispy_forms_tags %}
+
 {% block content %}
 
-<div class="row justify-content-center">
-<div class="col-md-5">
-<div class="card shadow">
-<div class="card-header text-center">
-<h4>Create Account</h4>
+<style>
+body {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    min-height: 100vh;
+}
+
+.signup-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-card {
+    width: 100%;
+    max-width: 420px;
+    border: none;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    padding: 30px;
+}
+
+.signup-title {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.btn-custom {
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-custom:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.login-link a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #007bff;
+}
+
+input, select {
+    border-radius: 10px !important;
+}
+</style>
+
+<div class="signup-container">
+    <div class="signup-card">
+
+        <h3 class="signup-title">Create Account </h3>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <button class="btn btn-custom w-100 mt-2">
+                Signup
+            </button>
+        </form>
+
+        <p class="login-link">
+            Already have an account?
+            <a href="{% url 'login' %}">Login</a>
+        </p>
+
+    </div>
 </div>
-<div class="card-body">
-<form method="POST">
-{% csrf_token %}
-{{form|crispy}}
-<button class="btn btn-primary w-100">
-Signup
-</button>
-</form>
-<p class="login-link">
-    Already have an account?
-    <a href="{% url 'login' %}">Login<a/>
-<p/>
-</div>
-</div>
-</div>
-</div>
+
 {% endblock %}

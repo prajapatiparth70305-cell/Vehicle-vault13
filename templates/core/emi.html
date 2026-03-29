@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMI Calculator</title>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI';
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    padding: 30px;
+    width: 350px;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+.card {
+    background: rgba(255,255,255,0.2);
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.calc {
+    background: #00c6ff;
+    color: white;
+}
+
+.pay {
+    background: #00e676;
+    color: black;
+}
+
+#result {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>🚗 EMI Calculator</h2>
+
+    <div class="card">
+        <h3>{{ car_name }}</h3>
+        <p>₹{{ price }}</p>
+    </div>
+
+    <input type="number" id="price" value="{{ price }}" readonly>
+
+    <input type="number" id="down" placeholder="Down Payment" oninput="updateLoan()">
+
+    <input type="number" id="amount" placeholder="Loan Amount" readonly>
+
+    <input type="number" id="rate" placeholder="Interest Rate (%)">
+
+    <input type="number" id="years" placeholder="Years">
+
+    <button class="calc" onclick="calculateEMI()">Calculate EMI</button>
+
+    <h3 id="result"></h3>
+
+    <button class="pay" onclick="payNow()">Pay Now</button>
+</div>
+
+<script>
+
+function updateLoan() {
+    let price = parseInt(document.getElementById("price").value) || 0;
+    let down = parseInt(document.getElementById("down").value) || 0;
+
+    let loan = price - down;
+
+    if (loan < 0) loan = 0;
+
+    document.getElementById("amount").value = loan;
+}
+
+function calculateEMI() {
+
+    let loan = parseInt(document.getElementById("amount").value);
+    let R = document.getElementById("rate").value / 12 / 100;
+    let N = document.getElementById("years").value * 12;
+
+    if (!loan || !R || !N) {
+        alert("Fill all fields ❗");
+        return;
+    }
+
+    let EMI = (loan * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+
+    document.getElementById("result").innerText = "EMI: ₹" + Math.round(EMI);
+}
+
+function payNow() {
+
+    let emiText = document.getElementById("result").innerText;
+    let amount = parseInt(emiText.replace(/\D/g, ''));
+
+    if (!amount) {
+        alert("Calculate EMI first ❗");
+        return;
+    }
+
+    var options = {
+        "key": "rzp_test_SRMYrgg9z1ynoY",
+        "amount": amount * 100,
+        "currency": "INR",
+        "name": "Vehicle Vault",
+        "description": "EMI Payment",
+
+        handler: function (response) {
+            window.location.href = `/core/success/?payment_id=${response.razorpay_payment_id}&amount=${amount}`;
+        }
+    };
+
+    var rzp = new Razorpay(options);
+    rzp.open();
+}
+</script>
+
+</body>
+</html>

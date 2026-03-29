@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EMI History</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+    background: linear-gradient(135deg, #1e1e2f, #2c2c54);
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.item {
+    margin: 10px;
+}
+
+.label {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.value {
+    font-weight: 500;
+}
+
+.btn {
+    margin-top: 10px;
+    display: inline-block;
+    padding: 7px 12px;
+    background: red;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+}
+.back-btn {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 8px 14px;
+    background: #444;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+}
+.pay {
+    background: #00c853;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>💳 EMI History</h2>
+
+{% if data %}
+    {% for item in data %}
+    <div class="card">
+
+        <div class="row">
+
+            <div class="item">
+                <div class="label">Payment ID</div>
+                <div class="value">{{ item.payment_id }}</div>
+            </div>
+
+            <div class="item">
+                <div class="label">Car name</div>
+                <div class="value">{{ item.car_name|default:"No Car" }}</div>
+            </div>
+
+            <div class="item">
+                <div class="label">Amount</div>
+                <div class="value">₹{{ item.amount }}</div>
+            </div>
+
+            <div class="item">
+                <div class="label">Date</div>
+                <div class="value">{{ item.date }}</div>
+            </div>
+
+        </div>
+
+        <a href="{% url 'view_history' item.id %}" class="btn">View</a>
+        <a href="{% url 'delete_history' item.id %}" class="btn">Delete</a>
+        <a href="{% url 'next_emi' item.id %}" class="btn pay">Pay Next EMI</a>
+        <a href="/core/cars/" class="back-btn">⬅ Back</a>
+
+    </div>
+    {% endfor %}
+
+{% else %}
+    <h3 style="text-align:center;">No Data Found 😕</h3>
+{% endif %}
+
+</div>
+
+</body>
+</html>

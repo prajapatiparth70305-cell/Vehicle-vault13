@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import Car,Purchase,Invoice,Cart
+from .models import Car,Purchase,Invoice,Cart,Notification,EMIHistory
 from .forms import CarForm, TestDrive
 from django.http import HttpResponse
 import razorpay,random
@@ -89,13 +89,32 @@ def login_view(request):
 
     return render(request,"core/login.html")
 
+
+@login_required
 def dashboard(request):
-    return render(request,'dashboard.html')
+
+    total_cars = Car.objects.count()
+
+   
+    purchased_cars = Purchase.objects.filter(user=request.user, is_insurance=False).count()
+
+  
+    insurance_active = Purchase.objects.filter(user=request.user, is_insurance=True).count()
+
+   
+    unread_count = request.user.notifications.filter(is_read=False).count()
+
+    return render(request, 'dashboard.html', {
+        'total_cars': total_cars,
+        'purchased_cars': purchased_cars,
+        'insurance_active': insurance_active,
+        'unread_count': unread_count
+    })
 
 def user_logout(request):
     logout(request)
     messages.success(request,"You have successfully logged out.")
-    return redirect('home')
+    return redirect('login')
 
 def cars(request):
     cars = Car.objects.all()
@@ -115,9 +134,8 @@ def add_car(request):
         fuel_type = request.POST.get('fuel_type')
         price = request.POST.get('price')
         image = request.FILES.get('image')
-        
 
-        Car.objects.create(
+        car = Car.objects.create(
             name=name,
             brand=brand,
             number=number,
@@ -125,10 +143,15 @@ def add_car(request):
             fuel_type=fuel_type,
             price=price,
             image=image,
-        
         )
 
-        return redirect('cars')   # yaha redirect hona chahiye
+        create_notification(
+            request.user,
+            f"{car.name} added successfully 🚗",
+            "success"
+        )
+
+        return redirect('cars')
 
     return render(request, 'add_car.html')
 
@@ -163,23 +186,32 @@ def buy_car(request, id):
     
 
     return render(request, 'buy_car.html', {'car': car})
+
+
 @login_required
 def payment_success(request, car_id):
     amount = request.GET.get('amount')
 
-    # 🔥 database me save karo
+    car = Car.objects.get(id=car_id)
+
     Purchase.objects.create(
         user=request.user,
-        car_id=car_id,
+        car=car,
         amount=amount,
         status="Paid"
     )
+
     
+    create_notification(
+        request.user,
+        f"You purchased {car.name} successfully 🎉",
+        "success"
+    )
+
     return render(request, 'payment_success.html', {
-        'amount': amount
+        'amount': amount,
+        'car': car
     })
-
-
 
 def purchase_history(request):
     purchases = Purchase.objects.filter(user=request.user)
@@ -250,9 +282,6 @@ def testdrive(request):
     return render(request,'testdrive.html')
 
 
-def emi_calculator(request, id):
-    car = Car.objects.get(id=id)
-    return render(request, 'emi_page.html', {'car': car})
 
 @login_required
 
@@ -276,7 +305,7 @@ def cart_page(request):
 def remove_from_cart(request, id):
     item = get_object_or_404(Cart, id=id)
     item.delete()
-    return redirect('cars')
+    return redirect('cart_page')
 
 
 
@@ -316,3 +345,193 @@ def reset_password(request):
 
     return render(request, 'reset_password.html')
 
+def insurance_page(request, car_id):
+    car = Car.objects.get(id=car_id)
+
+    # 🔥 Price based 3 plans
+    basic = int(car.price * 0.03)      # 3%
+    standard = int(car.price * 0.06)   # 6%
+    premium = int(car.price * 0.10)    # 10%
+
+    return render(request, 'insurance/insurance_page.html', {
+        'car': car,
+        'basic': basic,
+        'standard': standard,
+        'premium': premium
+    })
+
+
+def buy_insurance(request, car_id):
+    if request.method == "POST":
+        plan = request.POST.get('plan')
+        amount = int(request.POST.get('amount')) * 100
+
+        client = razorpay.Client(auth=("rzp_test_SRMYrgg9z1ynoY", "H8Fzo9bxZA2Kh5LmFFiToIb3"))
+
+        payment = client.order.create({
+            "amount": amount,
+            "currency": "INR",
+            "payment_capture": 1
+        })
+
+        return render(request, 'insurance/payment.html', {
+            'payment': payment,
+            'plan': plan,
+            'amount': amount // 100,
+            'car_id': car_id,
+            'razorpay_key': "rzp_test_SRMYrgg9z1ynoY"
+        })
+    
+@login_required
+def insurance_success(request, car_id):
+    plan = request.GET.get('plan')
+    amount = request.GET.get('amount')
+
+    car = Car.objects.get(id=car_id)
+
+    # 🔥 SAVE IN DATABASE
+    Purchase.objects.create(
+        user=request.user,
+        car=car,
+        amount=amount,
+        status="Paid",
+        is_insurance=True,
+        insurance_plan=plan
+    )
+
+    create_notification(
+        request.user,
+        f"Insurance purchased for {car.name} ({plan}) 🛡️",
+        "success"
+    )
+
+    return render(request, 'insurance/success.html', {
+        'car': car,
+        'plan': plan,
+        'amount': amount
+    })
+
+@login_required
+def insurance_history(request):
+    purchases = Purchase.objects.filter(
+        user=request.user,
+        is_insurance=True
+    )
+
+    return render(request, 'insurance/history.html', {
+        'purchases': purchases
+    })
+
+def insurance_invoice(request, id):
+    purchase = Purchase.objects.get(id=id)
+
+    return render(request, 'insurance/invoice.html', {
+        'purchase': purchase
+    })
+
+
+@login_required
+def delete_insurance(request, id):
+    purchase = get_object_or_404(Purchase, id=id, user=request.user)
+
+    purchase.delete()
+
+    return redirect('insurance_history')
+
+def create_notification(user, message, type='info'):
+    Notification.objects.create(
+        user=user,
+        message=message,
+        notification_type=type
+    )
+
+def get_notifications(request):
+    notifications = request.user.notifications.all().order_by('-created_at')
+    return render(request, 'notifications.html', {'notifications': notifications})
+
+def mark_as_read(request, id):
+    notification = Notification.objects.get(id=id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return redirect('notifications')
+
+@login_required
+def delete_notification(request, id):
+    notification = get_object_or_404(Notification, id=id, user=request.user)
+    notification.delete()
+    return redirect('dashboard')
+
+def emi_page(request):
+    car_name = request.GET.get("car")
+    price = request.GET.get("price")
+
+    # ✅ SAVE IN SESSION (IMPORTANT)
+    request.session['car_name'] = car_name
+
+    return render(request, "core/emi.html", {
+        "car_name": car_name,
+        "price": price
+    })
+
+
+# SUCCESS PAGE (SAVE DATA)
+def success_page(request):
+    payment_id = request.GET.get("payment_id")
+    amount = request.GET.get("amount")
+
+    # ✅ ALWAYS GET FROM SESSION
+    car_name = request.session.get("car_name")
+
+    print("CAR NAME:", car_name)
+
+    if payment_id:
+        EMIHistory.objects.create(
+            payment_id=payment_id,
+            amount=amount,
+            car_name=car_name
+        )
+
+    return render(request, "core/success.html")
+
+
+# HISTORY PAGE
+def history_page(request):
+    data = EMIHistory.objects.all().order_by('-id')
+    return render(request, "core/history.html", {"data": data})
+
+
+# DELETE
+def delete_history(request, id):
+    item = EMIHistory.objects.get(id=id)
+    item.delete()
+    return redirect('/core/history/')
+
+
+# VIEW SINGLE
+def view_history(request, id):
+    data = EMIHistory.objects.get(id=id)
+    return render(request, "core/view.html", {"item": data})
+
+
+# NEXT EMI PAYMENT
+def next_emi(request, id):
+    client = razorpay.Client(auth=("rzp_test_SRMYrgg9z1ynoY", "H8Fzo9bxZA2Kh5LmFFiToIb3"))
+
+    emi = EMIHistory.objects.get(id=id)
+
+    # ✅ SAVE AGAIN IN SESSION
+    request.session['car_name'] = emi.car_name
+
+    amount = emi.amount * 100
+
+    payment = client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": "1"
+    })
+
+    return render(request, "core/emipay.html", {
+        "payment": payment,
+        "emi": emi,
+        "razorpay_key": "rzp_test_SRMYrgg9z1ynoY"
+    })

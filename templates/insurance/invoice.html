@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6f9;
+            padding: 20px;
+        }
+
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .status {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .details {
+            margin-top: 20px;
+        }
+
+        .details p {
+            margin: 6px 0;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        table th {
+            background: #007bff;
+            color: white;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+
+        .btns {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="invoice-box">
+
+    <div class="header">
+        <div class="title">🧾 Invoice</div>
+        <div class="status">Paid</div>
+    </div>
+
+    <div class="details">
+        <p><strong>User:</strong> {{ purchase.user.username }}</p>
+        <p><strong>Car:</strong> {{ purchase.car.name }}</p>
+        <p><strong>Plan:</strong> {{ purchase.insurance_plan }}</p>
+        <p><strong>Date:</strong> {{ purchase.date|date:"d M Y" }}</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+        </tr>
+
+        <tr>
+            <td>{{ purchase.insurance_plan }} Insurance for {{ purchase.car.name }}</td>
+            <td>₹ {{ purchase.amount }}</td>
+        </tr>
+    </table>
+
+    <div class="total">
+        <strong>Total: ₹ {{ purchase.amount }}</strong>
+    </div>
+
+    <div class="btns">
+        <button onclick="window.print()" class="btn">🖨 Print</button>
+        <a href="{% url 'insurance_history' %}" class="btn">⬅ Back</a>
+    </div>
+
+</div>
+
+</body>
+</html>

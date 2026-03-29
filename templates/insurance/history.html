@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insurance History</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(0,0,0,0.3);
+        }
+
+        tr {
+            transition: 0.3s;
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .paid {
+            color: #00ffcc;
+            font-weight: bold;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .empty {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 20px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📜 My Insurance History</h1>
+
+<div class="container">
+
+{% if purchases %}
+
+<table>
+    <tr>
+        <th>Car</th>
+        <th>Plan</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Invoice</th>
+        <th>Action</th>
+    </tr>
+
+    {% for p in purchases %}
+    <tr>
+        <td>{{ p.car.name }}</td>
+        <td>{{ p.insurance_plan }}</td>
+        <td>₹ {{ p.amount }}</td>
+        <td class="paid">{{ p.status }}</td>
+        <td>{{ p.date|date:"d M Y" }}</td>
+        <td>
+            <a href="{% url 'insurance_invoice' p.id %}" class="btn">
+                View
+            </a>
+        </td>    
+        <td>
+            <a href="{% url 'delete_insurance' p.id %}" class="btn delete-btn"
+            onclick="return confirm('Are you sure you want to delete?')">
+                Delete
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+
+
+
+</table>
+
+{% else %}
+
+<div class="empty">
+    🚫 No Insurance Purchased Yet
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .info {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .amount {
+            font-size: 26px;
+            font-weight: bold;
+            color: #00ffcc;
+        }
+
+        .btn {
+            margin-top: 25px;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>💳 Complete Your Payment</h2>
+
+    <div class="info">Plan: <b>{{ plan }}</b></div>
+    <div class="info amount">₹ {{ amount }}</div>
+
+    <button id="pay-btn" class="btn">Pay Now 🚀</button>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ razorpay_key }}",
+    "amount": "{{ payment.amount }}",
+    "currency": "INR",
+    "order_id": "{{ payment.id }}",
+
+    "handler": function (response){
+        window.location.href = "/core/insurance/success/{{ car_id }}?plan={{ plan }}&amount={{ amount }}";
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById('pay-btn').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

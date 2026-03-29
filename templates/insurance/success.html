@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Success</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            animation: pop 0.6s ease;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .checkmark {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .info {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffff00;
+        }
+
+        .btn-group {
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="checkmark">✅</div>
+
+    <h1>Payment Successful</h1>
+
+    <div class="info">Car: <b>{{ car.name }}</b></div>
+    <div class="info">Plan: <b>{{ plan }}</b></div>
+    <div class="info amount">₹ {{ amount }}</div>
+
+    <div class="btn-group">
+        <a href="{% url 'insurance_history' %}" class="btn">
+            📜 View History
+        </a>
+
+        <a href="{% url 'cars' %}" class="btn green">View Cars </a>
+    </div>
+
+</div>
+
+</body>
+</html>

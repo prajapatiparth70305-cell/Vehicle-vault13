@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insurance Plans</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #2c5364);
+            color: white;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 32px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 25px;
+            width: 280px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.03);
+        }
+
+        .title {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #00ffcc;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        ul li {
+            margin: 8px 0;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: white;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Premium Highlight */
+        .premium {
+            border: 2px solid gold;
+            transform: scale(1.05);
+        }
+
+        .badge {
+            background: gold;
+            color: black;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🚗 {{ car.name }} Insurance Plans</h1>
+
+<div class="container">
+
+    <!-- BASIC -->
+    <div class="card">
+        <div class="title">Basic Plan</div>
+        <div class="price">₹ {{ basic }}</div>
+
+        <ul>
+            <li>✔ Third Party Cover</li>
+            <li>✔ Legal Protection</li>
+            <li>✔ Affordable</li>
+        </ul>
+
+        <form method="POST" action="{% url 'buy_insurance' car.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="plan" value="Basic">
+            <input type="hidden" name="amount" value="{{ basic }}">
+            <button class="btn">Buy Now</button>
+        </form>
+    </div>
+
+    <!-- STANDARD -->
+    <div class="card">
+        <div class="title">Standard Plan</div>
+        <div class="price">₹ {{ standard }}</div>
+
+        <ul>
+            <li>✔ Own Damage Cover</li>
+            <li>✔ Theft Protection</li>
+            <li>✔ Fire Cover</li>
+        </ul>
+
+        <form method="POST" action="{% url 'buy_insurance' car.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="plan" value="Standard">
+            <input type="hidden" name="amount" value="{{ standard }}">
+            <button class="btn">Buy Now</button>
+        </form>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="card premium">
+        <div class="badge">BEST</div>
+        <div class="title">Premium Plan</div>
+        <div class="price">₹ {{ premium }}</div>
+
+        <ul>
+            <li>✔ Full Damage Cover</li>
+            <li>✔ Zero Depreciation</li>
+            <li>✔ Roadside Assistance</li>
+            <li>✔ Fast Claims</li>
+        </ul>
+
+        <form method="POST" action="{% url 'buy_insurance' car.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="plan" value="Premium">
+            <input type="hidden" name="amount" value="{{ premium }}">
+            <button class="btn">Buy Now 🚀</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

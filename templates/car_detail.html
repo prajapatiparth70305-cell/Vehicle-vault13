@@ -116,6 +116,10 @@
        
         <div class="btn-group">
 
+            <a href="{% url 'insurance_page' car.id %}" class="btn insurance-btn">
+                Get Insurance 🚗
+            </a>
+
             <a href="{% url 'add_to_cart' car.id %}" class="btn cart">🛒Add To Cart</a>
             <a href="{% url 'cars' %}" class="btn view">🔙 Back</a>
 
