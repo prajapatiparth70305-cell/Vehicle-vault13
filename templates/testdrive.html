@@ -1,109 +1,100 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Test Drive</title>
+    <title>Book Test Drive</title>
 
 <style>
-
-body{
-background:#0f172a;
-font-family:Arial;
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#2c5364);
+    color: white;
 }
 
-.container{
-width:420px;
-margin:80px auto;
-background:white;
-padding:30px;
-border-radius:12px;
-box-shadow:0 0 20px rgba(0,0,0,0.4);
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-h2{
-text-align:center;
-margin-bottom:20px;
-color:#0f172a;
+/* CARD */
+.card {
+    width: 400px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    text-align: center;
 }
 
-input,select{
-width:100%;
-padding:10px;
-margin:10px 0;
-border:1px solid #ddd;
-border-radius:6px;
-font-size:14px;
+/* CAR PREVIEW */
+.car-preview img {
+    width: 120px;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
-button{
-width:100%;
-padding:12px;
-background:#2563eb;
-color:white;
-border:none;
-border-radius:6px;
-font-size:16px;
-cursor:pointer;
+.car-preview h3 {
+    color: #00e6e6;
 }
 
-button:hover{
-background:#1d4ed8;
+/* INPUT */
+input {
+    width: 90%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: none;
 }
 
-.success{
-background:#22c55e;
-color:white;
-padding:10px;
-text-align:center;
-border-radius:5px;
-margin-bottom:15px;
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    margin-top: 10px;
+    background: linear-gradient(45deg,#ff6a00,#ee0979);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
 }
 
+.error {
+    color: red;
+}
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
+    <div class="card">
 
-<h2>🚗 Book Test Drive</h2>
+        <h2>🚗 Book Test Drive</h2>
 
-{% if success %}
-<div class="success">
-Test Drive Booked Successfully!
-</div>
-{% endif %}
+        <!-- CAR INFO -->
+        <div class="car-preview">
+            <img src="{{ car.image.url }}">
+            <h3>{{ car.brand }} {{ car.name }}</h3>
+        </div>
 
-<form method="POST">
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
 
-{% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
 
-<input type="text" name="name" placeholder="Your Name" required>
+            <input type="date" name="date" required>
+            <input type="time" name="time" required>
 
-<input type="email" name="email" placeholder="Email" required>
+            <button type="submit">Confirm Booking</button>
+        </form>
 
-<input type="text" name="phone" placeholder="Phone Number" required>
-
-<select name="car" required>
-
-<option value="">Select </option>
-
-<option>Hyundai Creta</option>
-<option>Tata Nexon</option>
-<option>Mahindra Thar</option>
-<option>Maruti Brezza</option>
-
-</select>
-
-<input type="date" name="date" required>
-
-<input type="time" name="time" required>
-
-<button type="submit">Book Test Drive</button>
-
-</form>
-
+    </div>
 </div>
 
 </body>

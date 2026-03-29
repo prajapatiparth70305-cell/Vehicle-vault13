@@ -72,19 +72,6 @@ class Vehicle(models.Model):
     def _str_(self):
         return self.name
     
-
-class TestDrive(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.CharField(max_length=15)
-    car_name = models.CharField(max_length=100)
-    date = models.DateField()
-    time = models.TimeField()
-
-    def _str_(self):
-        return self.name
-
-
     
 class Car(models.Model):
     name = models.CharField(max_length=100)
@@ -99,7 +86,17 @@ class Car(models.Model):
     year =models.IntegerField(null=True)
     def __str__(self):
         return self.name
-    
+
+
+
+class TestDrive(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    date = models.DateField()
+    time = models.TimeField()
+
+    def _str_(self):
+        return f"{self.user.username} - {self.car.name}"
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

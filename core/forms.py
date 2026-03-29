@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from .models import User,Car,TestDrive
+from .models import User,Car
 from django import forms
 
 class UserSignupForm(UserCreationForm):
@@ -21,10 +21,6 @@ class CarForm(forms.ModelForm):
         model = Car
         fields ='__all__'
 
-class TestDriveForm(forms.ModelForm):
-    class Meta:
-        model = TestDrive
-        fields = '__all__'
 
 
 

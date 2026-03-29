@@ -5,12 +5,12 @@ from .forms import UserSignupForm,UserLoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import send_mail,EmailMultiAlternatives
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from .models import Car,Purchase,Invoice,Cart,Notification,EMIHistory
-from .forms import CarForm, TestDrive
+from .forms import CarForm
 from django.http import HttpResponse
 import razorpay,random
 from django.utils import timezone
@@ -118,8 +118,22 @@ def user_logout(request):
 
 def cars(request):
     cars = Car.objects.all()
-    return render(request,'cars.html',{'cars':cars})
 
+    search_query = request.GET.get('search')
+
+    if search_query:
+        cars = cars.filter(name__icontains=search_query)
+
+    return render(request, 'cars.html', {
+        'cars': cars,
+        'search_query': search_query
+    })
+
+
+def delete_car(request, id):
+    car = get_object_or_404(Car, id=id)
+    car.delete()
+    return redirect('cars')
 
 def car_detail(request,id):
     car = get_object_or_404(Car,id=id)
@@ -257,31 +271,9 @@ def compare(request):
 
 
 
-def testdrive(request):
-
-    if request.method == "POST":
-        name = request.POST['name']
-        email = request.POST['email']
-        phone = request.POST['phone']
-        car_name = request.POST['car']
-        date = request.POST['date']
-        time = request.POST['time']
-
-        TestDrive.objects.create(
-            name=name,
-            email=email,
-            phone=phone,
-            car_name=car_name,
-            date=date,
-            time=time
-        )
-
-        
-        return render(request,'testdrive.html',{'success':True})
-       
-    return render(request,'testdrive.html')
 
 
+    
 
 @login_required
 

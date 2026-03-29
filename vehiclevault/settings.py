@@ -137,6 +137,7 @@ AUTH_USER_MODEL = 'core.User'
 
 LOGOUT_REDIRECT_URL = 'login'   # logout ke baad login page par bheje
 LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

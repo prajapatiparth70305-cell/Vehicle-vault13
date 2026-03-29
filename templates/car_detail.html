@@ -2,8 +2,9 @@
 <html>
 <head>
     <title>Car Details</title>
-    <style>
-        body {
+
+<style>
+body {
     background: linear-gradient(135deg, #0f2027, #2c5364);
     font-family: 'Poppins', sans-serif;
     color: white;
@@ -24,17 +25,22 @@
     backdrop-filter: blur(15px);
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
+/* IMAGE */
 .car-image img {
-    width: 300px;
+    width: 130px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     transition: 0.3s;
 }
 
 .car-image img:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 
+/* DETAILS */
 .car-details {
     margin-top: 20px;
 }
@@ -42,8 +48,10 @@
 .row {
     display: flex;
     justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
 }
 
 .row span:first-child {
@@ -54,28 +62,31 @@
     font-weight: bold;
 }
 
+/* EXTRA */
+.extra {
+    margin-top: 10px;
+    color: #ddd;
+}
+
+/* BUTTONS */
 .btn-group {
     margin-top: 25px;
     display: flex;
-    justify-content: space-between;
     gap: 10px;
 }
 
 .btn {
     flex: 1;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 12px;
     text-decoration: none;
     color: white;
     font-weight: 600;
     transition: 0.3s;
+    text-align: center;
 }
 
-.btn.buy {
-    background: linear-gradient(45deg, #00c853, #64dd17);
-}
-
-.btn.emi {
+.insurance-btn {
     background: linear-gradient(45deg, #ff9800, #ff5722);
 }
 
@@ -91,7 +102,22 @@
     transform: translateY(-3px);
     box-shadow: 0 5px 20px rgba(0,0,0,0.4);
 }
+
+/* ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 </style>
+</head>
+
+<body>
 
 <div class="page-container">
 
@@ -103,6 +129,8 @@
             <img src="{{ car.image.url }}" alt="car">
         </div>
 
+        
+
         <div class="car-details">
             <div class="row"><span>Name</span><span>{{ car.name }}</span></div>
             <div class="row"><span>Brand</span><span>{{ car.brand }}</span></div>
@@ -113,18 +141,27 @@
             <div class="row"><span>Description</span><span>{{ car.description }}</span></div>
         </div>
 
-       
         <div class="btn-group">
 
             <a href="{% url 'insurance_page' car.id %}" class="btn insurance-btn">
-                Get Insurance 🚗
+                🚗 Insurance
             </a>
 
-            <a href="{% url 'add_to_cart' car.id %}" class="btn cart">🛒Add To Cart</a>
-            <a href="{% url 'cars' %}" class="btn view">🔙 Back</a>
+            <a href="{% url 'add_to_cart' car.id %}" class="btn cart">
+                🛒 Cart
+            </a>
+
+            <a href="{% url 'testdrive' %}">🧪 Test Drive</a>
+
+            <a href="{% url 'cars' %}" class="btn view">
+                🔙 Back
+            </a>
 
         </div>
 
     </div>
 
 </div>
+
+</body>
+</html>
