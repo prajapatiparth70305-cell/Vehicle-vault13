@@ -1,100 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Book Test Drive</title>
+<title>Book Test Drive</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg,#0f2027,#2c5364);
-    color: white;
 }
 
+body {
+    height:100vh;
+    background: linear-gradient(135deg,#141e30,#243b55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+}
+
+/* Glass Card */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-/* CARD */
-.card {
-    width: 400px;
-    padding: 30px;
-    border-radius: 20px;
     background: rgba(255,255,255,0.08);
     backdrop-filter: blur(15px);
+    padding:40px;
+    border-radius:20px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    text-align: center;
+    width:350px;
+    text-align:center;
 }
 
-/* CAR PREVIEW */
-.car-preview img {
-    width: 120px;
-    border-radius: 10px;
-    margin-bottom: 10px;
+/* Heading */
+h1 {
+    margin-bottom:20px;
 }
 
-.car-preview h3 {
-    color: #00e6e6;
+/* Inputs */
+select, input {
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:10px;
+    background: rgba(255,255,255,0.15);
+    color:white;
+    font-size:14px;
+    outline:none;
 }
 
-/* INPUT */
-input {
-    width: 90%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: none;
+/* Placeholder color */
+input::placeholder {
+    color:#ddd;
 }
 
-/* BUTTON */
+/* Button */
 button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 25px;
-    border: none;
-    margin-top: 10px;
-    background: linear-gradient(45deg,#ff6a00,#ee0979);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    border:none;
+    border-radius:10px;
+    background: linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
 }
 
-.error {
-    color: red;
+button:hover {
+    transform: scale(1.05);
+    box-shadow:0 5px 20px rgba(0,198,255,0.5);
 }
+
+/* Selected car text */
+#carName {
+    margin:10px 0;
+    font-size:14px;
+    color:#00eaff;
+}
+
+/* Back button */
+.back-btn {
+    position:absolute;
+    top:20px;
+    left:20px;
+    text-decoration:none;
+    color:white;
+    background: rgba(255,255,255,0.1);
+    padding:8px 15px;
+    border-radius:8px;
+    transition:0.3s;
+}
+
+.back-btn:hover {
+    background:#00c6ff;
+}
+
 </style>
+
+<script>
+function showCarName() {
+    let select = document.getElementById("car");
+    let selectedText = select.options[select.selectedIndex].text;
+    document.getElementById("carName").innerText = "🚘 Selected Car: " + selectedText;
+}
+</script>
+
 </head>
 
 <body>
 
+<a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+
 <div class="container">
-    <div class="card">
+    <h1>🚗 Book Test Drive</h1>
 
-        <h2>🚗 Book Test Drive</h2>
+    <form method="POST">
+        {% csrf_token %}
 
-        <!-- CAR INFO -->
-        <div class="car-preview">
-            <img src="{{ car.image.url }}">
-            <h3>{{ car.brand }} {{ car.name }}</h3>
-        </div>
+        <select name="car" id="car" onchange="showCarName()" required>
+            <option value="">Select Car</option>
+            {% for car in cars %}
+            <option value="{{ car.id }}">{{ car.name }}</option>
+            {% endfor %}
+        </select>
 
-        {% if error %}
-        <p class="error">{{ error }}</p>
-        {% endif %}
+        <p id="carName"></p>
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="date" name="date" required>
+        <input type="time" name="time" required>
 
-        <form method="POST">
-            {% csrf_token %}
-
-            <input type="date" name="date" required>
-            <input type="time" name="time" required>
-
-            <button type="submit">Confirm Booking</button>
-        </form>
-
-    </div>
+        <button type="submit">Confirm Booking</button>
+    </form>
 </div>
 
 </body>

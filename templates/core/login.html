@@ -1,4 +1,4 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,102 +10,7 @@
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-<style>
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
-body {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #1d2b64, #f8cdda);
-}
-
-/* Glass Card */
-.login-container {
-    width: 350px;
-    padding: 30px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    text-align: center;
-    color: #fff;
-    animation: fadeIn 1s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-
-.login-container h2 {
-    margin-bottom: 20px;
-    font-weight: 600;
-}
-
-/* Inputs */
-.login-container input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: none;
-    border-radius: 10px;
-    outline: none;
-}
-
-/* Button */
-.login-container button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #ff7eb3, #ff758c);
-    color: #fff;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.login-container button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-/* Links */
-.forgot-btn {
-    display: block;
-    margin-top: 10px;
-    font-size: 14px;
-    color: #fff;
-    text-decoration: none;
-}
-
-.forgot-btn:hover {
-    text-decoration: underline;
-}
-
-.signup-link {
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-.signup-link a {
-    color: #fff;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.signup-link a:hover {
-    text-decoration: underline;
-}
-</style>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 
 

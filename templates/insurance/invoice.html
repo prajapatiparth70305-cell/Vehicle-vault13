@@ -100,7 +100,7 @@
     </div>
 
     <div class="details">
-        <p><strong>User:</strong> {{ purchase.user.username }}</p>
+        <p><strong>User:</strong> {{ purchase.user.email }}</p>
         <p><strong>Car:</strong> {{ purchase.car.name }}</p>
         <p><strong>Plan:</strong> {{ purchase.insurance_plan }}</p>
         <p><strong>Date:</strong> {{ purchase.date|date:"d M Y" }}</p>
@@ -124,6 +124,7 @@
 
     <div class="btns">
         <button onclick="window.print()" class="btn">🖨 Print</button>
+        <a href="{% url 'download_invoice' purchase.id %}" class="btn">📥 Download PDF</a>
         <a href="{% url 'insurance_history' %}" class="btn">⬅ Back</a>
     </div>
 

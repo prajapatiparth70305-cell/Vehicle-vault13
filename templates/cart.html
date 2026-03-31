@@ -77,10 +77,31 @@
             margin-top: 50px;
             color: #94a3b8;
         }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #ff512f, #dd2476);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 81, 47, 0.3);
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 81, 47, 0.4);
+        }
     </style>
 
 </head>
 <body>
+
+<a href="{% url 'cars' %}" class="back-btn">⬅ Back to Cars</a>
 
 <h2>Your Cart 🛒</h2>
 

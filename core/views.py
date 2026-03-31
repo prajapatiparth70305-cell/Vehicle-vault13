@@ -5,13 +5,19 @@ from .forms import UserSignupForm,UserLoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.mail import send_mail,EmailMultiAlternatives
+from django.core.mail import send_mail,EmailMultiAlternatives, EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from .models import Car,Purchase,Invoice,Cart,Notification,EMIHistory
-from .forms import CarForm
 from django.http import HttpResponse
+from io import BytesIO
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.lib import colors
+from .models import Car,Purchase,Invoice,Cart,Notification,EMIHistory,TestDrive
+from .forms import CarForm
 import razorpay,random
 from django.utils import timezone
 from datetime import timedelta
@@ -201,6 +207,8 @@ def buy_car(request, id):
 
     return render(request, 'buy_car.html', {'car': car})
 
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
 
 @login_required
 def payment_success(request, car_id):
@@ -215,12 +223,36 @@ def payment_success(request, car_id):
         status="Paid"
     )
 
-    
     create_notification(
         request.user,
         f"You purchased {car.name} successfully 🎉",
         "success"
     )
+
+    # ✅ EMAIL SEND KARO
+    subject = "Payment Successful 🚗"
+    message = f"""
+Hello {request.user.email},
+
+Your payment has been completed successfully.
+
+Car: {car.name}
+Amount Paid: ₹{amount}
+
+You can check your purchase history anytime.
+
+Thank you for choosing This Car 🚗
+"""
+
+    # ⚠️ Ensure email exists
+    if request.user.email:
+        send_mail(
+            subject,
+            message,
+            'your_email@gmail.com',  # sender email
+            [request.user.email],   # receiver
+            fail_silently=False,
+        )
 
     return render(request, 'payment_success.html', {
         'amount': amount,
@@ -271,6 +303,43 @@ def compare(request):
 
 
 
+def testdrive(request):
+    cars = Car.objects.all()
+
+    if request.method == "POST":
+        car_id = request.POST.get('car')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+
+        car = Car.objects.get(id=car_id)
+
+        # Save in DB
+        TestDrive.objects.create(
+            user=request.user,
+            car=car,
+            date=date,
+            time=time
+        )
+
+        # EMAIL SEND
+        subject = "🚗 Test Drive Confirmation"
+        from_email = "your_email@gmail.com"
+        to_email = [request.user.email]
+
+        html_content = render_to_string('testdrive_email.html', {
+            'user': request.user,
+            'car': car,
+            'date': date,
+            'time': time
+        })
+
+        msg = EmailMultiAlternatives(subject, "", from_email, to_email)
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+
+        return redirect('cars')
+
+    return render(request, 'testdrive.html', {'cars': cars})
 
 
     
@@ -374,6 +443,7 @@ def buy_insurance(request, car_id):
             'razorpay_key': "rzp_test_SRMYrgg9z1ynoY"
         })
     
+
 @login_required
 def insurance_success(request, car_id):
     plan = request.GET.get('plan')
@@ -397,7 +467,32 @@ def insurance_success(request, car_id):
         "success"
     )
 
+    # ✅ 👉 YAHAN EMAIL ADD KARO (IMPORTANT PART)
+    subject = "Insurance Purchase Successful 🚗"
+    message = f"""
+Hello {request.user.email},
+
+Your insurance has been successfully purchased!
+
+Car: {car.name}
+Plan: {plan}
+Amount Paid: ₹{amount}
+
+Drive safe! 🛡️
+Vehicle Vault Team
+"""
+
+    send_mail(
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [request.user.email],
+        fail_silently=False
+    )
+
+    # 👇 FINAL RESPONSE
     return render(request, 'insurance/success.html', {
+        'user': request.user,
         'car': car,
         'plan': plan,
         'amount': amount
@@ -471,7 +566,7 @@ def success_page(request):
     payment_id = request.GET.get("payment_id")
     amount = request.GET.get("amount")
 
-    # ✅ ALWAYS GET FROM SESSION
+    # ✅ SESSION DATA
     car_name = request.session.get("car_name")
 
     print("CAR NAME:", car_name)
@@ -482,6 +577,29 @@ def success_page(request):
             amount=amount,
             car_name=car_name
         )
+
+        # ✅ 👉 EMAIL YAHAN ADD KARO
+        if request.user.is_authenticated:
+            subject = "EMI Payment Successful 💳"
+            message = f"""
+Hello {request.user.email},
+
+Your EMI payment has been successfully completed!
+
+Car: {car_name}
+Payment ID: {payment_id}
+Amount Paid: ₹{amount}
+
+Thank you for choosing This Car 🚗
+"""
+
+            send_mail(
+                subject,
+                message,
+                settings.EMAIL_HOST_USER,
+                [request.user.email],
+                fail_silently=False
+            )
 
     return render(request, "core/success.html")
 
@@ -527,3 +645,99 @@ def next_emi(request, id):
         "emi": emi,
         "razorpay_key": "rzp_test_SRMYrgg9z1ynoY"
     })
+
+
+@login_required
+def download_invoice(request, id):
+    """Generate and download invoice as PDF"""
+    purchase = get_object_or_404(Purchase, id=id)
+    
+    # Create PDF buffer
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = []
+    
+    # Create styles
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=24,
+        textColor=colors.HexColor('#333333'),
+        spaceAfter=30,
+        alignment=1  # Center
+    )
+    
+    normal_style = styles['Normal']
+    
+    # Add title
+    elements.append(Paragraph("🧾 INVOICE", title_style))
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Add user details
+    details_data = [
+        ['User Email:', purchase.user.email],
+        ['Car Name:', purchase.car.name],
+        ['Insurance Plan:', purchase.insurance_plan],
+        ['Date:', purchase.date.strftime('%d %b %Y')],
+    ]
+    
+    details_table = Table(details_data, colWidths=[2*inch, 3*inch])
+    details_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f0f0f0')),
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 11),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
+        ('TOPPADDING', (0, 0), (-1, -1), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+    ]))
+    
+    elements.append(details_table)
+    elements.append(Spacer(1, 0.3*inch))
+    
+    # Add invoice items table
+    invoice_data = [
+        ['Description', 'Amount'],
+        [f'{purchase.insurance_plan} Insurance for {purchase.car.name}', f'₹ {purchase.amount}'],
+    ]
+    
+    invoice_table = Table(invoice_data, colWidths=[3.5*inch, 1.5*inch])
+    invoice_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#007bff')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 12),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('TOPPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('FONTSIZE', (0, 1), (-1, -1), 11),
+        ('PADDING', (0, 1), (-1, -1), 12),
+    ]))
+    
+    elements.append(invoice_table)
+    elements.append(Spacer(1, 0.2*inch))
+    
+    # Add total
+    total_style = ParagraphStyle(
+        'Total',
+        parent=styles['Normal'],
+        fontSize=14,
+        textColor=colors.HexColor('#333333'),
+        alignment=2  # Right
+    )
+    elements.append(Paragraph(f"<b>Total: ₹ {purchase.amount}</b>", total_style))
+    
+    # Build PDF
+    doc.build(elements)
+    buffer.seek(0)
+    
+    # Return as download
+    response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="invoice_{purchase.id}.pdf"'
+    return response
+
+

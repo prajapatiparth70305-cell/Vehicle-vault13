@@ -32,13 +32,8 @@ class User(AbstractBaseUser):
         return self.is_admin
         
     email = models.EmailField(unique=True)
-    role_choice =(
-        ('admin','admin'),
-        ('owner','owner'),
-        ('manager','manager'),
-        ('customer','customer')
-    )
-    role = models.CharField(max_length=10,choices=role_choice,default='user')
+    
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -50,7 +45,7 @@ class User(AbstractBaseUser):
     otp = models.CharField(max_length=6, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     otp_created_at = models.DateTimeField(null=True,blank=True)
-    
+    mobile = models.CharField(max_length=15, null=True, blank=True)
     objects = UserManager()
 
     #override userName filed
@@ -88,7 +83,6 @@ class Car(models.Model):
         return self.name
 
 
-
 class TestDrive(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
@@ -97,6 +91,9 @@ class TestDrive(models.Model):
 
     def _str_(self):
         return f"{self.user.username} - {self.car.name}"
+
+
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -19,7 +19,7 @@ urlpatterns = [
     path('delete_purchase/<int:id>/', views.delete_purchase,name='delete_purchase'),
     path("view_invoice/<int:id>/",views.invoice,name="view_invoice"),
     path('compare/' , views.compare,name='compare'),
-   
+    path('test-drive/', views.testdrive, name='test_drive'),
     path('add_to_cart/<int:id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.cart_page, name='cart_page'),
     path('remove_from_cart/<int:id>/', views.remove_from_cart, name='remove_from_cart'),
@@ -31,6 +31,7 @@ urlpatterns = [
     path('insurance/history/', views.insurance_history, name='insurance_history'),
     path('insurance/invoice/<int:id>/', views.insurance_invoice, name='insurance_invoice'),
     path('insurance/delete/<int:id>/', views.delete_insurance, name='delete_insurance'),
+    path('insurance/download-pdf/<int:id>/', views.download_invoice, name='download_invoice'),
     path('notifications/', views.get_notifications, name='notifications'),
     path('notification/read/<int:id>/', views.mark_as_read, name='mark_as_read'),
     path('notification/delete/<int:id>/', views.delete_notification, name='delete_notification'),

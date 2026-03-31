@@ -1,3 +1,4 @@
+
 {% extends 'auth_base.html' %}
 {% load crispy_forms_tags %}
 
@@ -12,8 +13,9 @@ body {
 .signup-container {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 40px;
 }
 
 .signup-card {
@@ -25,6 +27,8 @@ body {
     backdrop-filter: blur(10px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     padding: 30px;
+    max-height: 100vh;
+    overflow-y: auto;
 }
 
 .signup-title {

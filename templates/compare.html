@@ -3,163 +3,239 @@
 <head>
     <title>Compare Cars</title>
 
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
     <style>
         body{
-            font-family: Arial, sans-serif;
-            background:#f4f6f9;
-            padding:40px;
+            margin:0;
+            font-family:'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color:white;
         }
 
         .container{
-            max-width:900px;
-            margin:auto;
-            background:white;
+            max-width:1000px;
+            margin:60px auto;
             padding:30px;
-            border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            border-radius:20px;
+            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.08);
+            box-shadow:0 8px 32px rgba(0,0,0,0.4);
+            text-align:center;
         }
 
         h2{
-            text-align:center;
+            margin-bottom:10px;
+        }
+
+        .subtitle{
+            color:#cbd5f5;
+            font-size:14px;
             margin-bottom:25px;
         }
 
-        select, button{
-            padding:10px;
-            margin:5px;
-            border-radius:6px;
-            border:1px solid #ccc;
+        form{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:15px;
+            flex-wrap:wrap;
+        }
+
+        select{
+            padding:12px;
+            border-radius:10px;
+            border:none;
+            outline:none;
+            min-width:180px;
+            background:#1e293b;
+            color:white;
         }
 
         button{
-            background:#007bff;
-            color:white;
+            padding:12px 25px;
             border:none;
+            border-radius:12px;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            color:white;
+            font-weight:600;
             cursor:pointer;
+            transition:0.3s;
         }
 
         button:hover{
-            background:#0056b3;
+            transform:scale(1.05);
+            box-shadow:0 0 20px rgba(59,130,246,0.6);
         }
 
-        table{
-            width:100%;
-            margin-top:20px;
-            border-collapse:collapse;
+        /* Table → Premium Card Style */
+        .compare-result{
+            margin-top:40px;
+            display:flex;
+            gap:20px;
+            justify-content:center;
+            flex-wrap:wrap;
         }
 
-        th{
-            background:#007bff;
+        .card{
+            width:280px;
+            padding:20px;
+            border-radius:15px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            box-shadow:0 5px 20px rgba(0,0,0,0.3);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        .card h3{
+            margin-bottom:15px;
+        }
+
+        .feature{
+            display:flex;
+            justify-content:space-between;
+            padding:8px 0;
+            border-bottom:1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature:last-child{
+            border:none;
+        }
+
+        .label{
+            color:#94a3b8;
+        }
+
+        /* Exit Button */
+        .exit-btn{
+            position:absolute;
+            top:20px;
+            right:20px;
+            background: linear-gradient(45deg,#ff4d4d,#ff0000);
             color:white;
-            padding:10px;
+            padding:12px 25px;
+            border-radius:25px;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:bold;
+            box-shadow:0 5px 15px rgba(0,0,0,0.3);
+            transition:0.3s;
         }
 
-        td{
-            padding:10px;
-            text-align:center;
-            border-bottom:1px solid #ddd;
+        .exit-btn:hover{
+            transform:translateY(-3px) scale(1.05);
+            box-shadow:0 10px 20px rgba(0,0,0,0.4);
         }
 
-        tr:hover{
-            background:#f1f1f1;
+        @media(max-width:768px){
+            form{
+                flex-direction:column;
+            }
         }
-    .exit-btn{
-    position:absolute;
-    top:20px;
-    right:20px;
-    background: linear-gradient(45deg,#ff4d4d,#ff0000);
-    color:white;
-    padding:12px 25px;
-    border-radius:25px;
-    text-decoration:none;
-    font-size:16px;
-    font-weight:bold;
-    box-shadow:0 5px 15px rgba(0,0,0,0.3);
-    transition:all 0.3s ease;
-}
 
-/* Hover animation */
-.exit-btn:hover{
-    transform:translateY(-3px) scale(1.05);
-    box-shadow:0 10px 20px rgba(0,0,0,0.4);
-}
-
-/* Click animation */
-.exit-btn:active{
-    transform:scale(0.95);
-}
-  
     </style>
-
 </head>
 
 <body>
 
+<a href="{% url 'dashboard' %}" class="exit-btn">❌ Exit</a>
+
 <div class="container">
 
-<h2>🚗 Compare Cars</h2>
+    <h2>🚗 Compare Cars Like a Pro</h2>
+    <p class="subtitle">Find the best car for you</p>
 
-<form method="get">
-    <select name="car1">
-        {% for car in cars %}
-        <option value="{{car.id}}">{{car.name}}</option>
-        {% endfor %}
-    </select>
+    <form method="get">
+        <select name="car1">
+            <option>Select Car 1</option>
+            {% for car in cars %}
+            <option value="{{car.id}}">{{car.name}}</option>
+            {% endfor %}
+        </select>
 
-    <select name="car2">
-        {% for car in cars %}
-        <option value="{{car.id}}">{{car.name}}</option>
-        {% endfor %}
-    </select>
+        <select name="car2">
+            <option>Select Car 2</option>
+            {% for car in cars %}
+            <option value="{{car.id}}">{{car.name}}</option>
+            {% endfor %}
+        </select>
 
-    <button type="submit">Compare</button>
-</form>
+        <button type="submit">Compare</button>
+    </form>
 
-{% if car1 and car2 %}
+    {% if car1 and car2 %}
 
-<table>
-<tr>
-<th>Feature</th>
-<th>{{car1.name}}</th>
-<th>{{car2.name}}</th>
-</tr>
+    <div class="compare-result">
 
-<tr>
-<td>Brand</td>
-<td>{{car1.brand}}</td>
-<td>{{car2.brand}}</td>
-</tr>
+        <!-- Car 1 -->
+        <div class="card">
+            <h3>{{car1.name}}</h3>
 
-<tr>
-<td>Price</td>
-<td>{{car1.price}}</td>
-<td>{{car2.price}}</td>
-</tr>
+            <div class="feature">
+                <span class="label">Brand</span>
+                <span>{{car1.brand}}</span>
+            </div>
 
-<tr>
-<td>Model</td>
-<td>{{car1.model}}</td>
-<td>{{car2.model}}</td>
-</tr>
+            <div class="feature">
+                <span class="label">Price</span>
+                <span>{{car1.price}}</span>
+            </div>
 
-<tr>
-<td>Mileage</td>
-<td>{{car1.mileage}}</td>
-<td>{{car2.mileage}}</td>
-</tr>
+            <div class="feature">
+                <span class="label">Model</span>
+                <span>{{car1.model}}</span>
+            </div>
 
-<tr>
-<td>Fuel Type</td>
-<td>{{car1.fuel_type}}</td>
-<td>{{car2.fuel_type}}</td>
-</tr>
+            <div class="feature">
+                <span class="label">Mileage</span>
+                <span>{{car1.mileage}}</span>
+            </div>
 
-</table>
+            <div class="feature">
+                <span class="label">Fuel</span>
+                <span>{{car1.fuel_type}}</span>
+            </div>
+        </div>
 
-{% endif %}
-</div>
-<div>
-<a href="{% url 'home' %}" class="exit-btn">❌ Exit</a>
+        <!-- Car 2 -->
+        <div class="card">
+            <h3>{{car2.name}}</h3>
+
+            <div class="feature">
+                <span class="label">Brand</span>
+                <span>{{car2.brand}}</span>
+            </div>
+
+            <div class="feature">
+                <span class="label">Price</span>
+                <span>{{car2.price}}</span>
+            </div>
+
+            <div class="feature">
+                <span class="label">Model</span>
+                <span>{{car2.model}}</span>
+            </div>
+
+            <div class="feature">
+                <span class="label">Mileage</span>
+                <span>{{car2.mileage}}</span>
+            </div>
+
+            <div class="feature">
+                <span class="label">Fuel</span>
+                <span>{{car2.fuel_type}}</span>
+            </div>
+        </div>
+
+    </div>
+
+    {% endif %}
+
 </div>
 
 </body>

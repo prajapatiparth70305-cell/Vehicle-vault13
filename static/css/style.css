@@ -1,0 +1,229 @@
+    
+    
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1d2b64, #f8cdda);
+}
+
+/* Glass Card */
+.login-container {
+    width: 350px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    text-align: center;
+    color: #fff;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Inputs */
+.login-container input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+}
+
+/* Button */
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff7eb3, #ff758c);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-container button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Links */
+.forgot-btn {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.forgot-btn:hover {
+    text-decoration: underline;
+}
+
+.signup-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.signup-link a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Background */
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #1e3a8a, #0f172a);
+    color: white;
+}
+
+/* Main Card */
+.compare-card {
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+/* Heading */
+.compare-card h2 {
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* Form Layout */
+.compare-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Dropdown */
+select {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+
+    background: rgba(255,255,255,0.1);
+    color: rgb(54, 24, 161);
+    font-size: 14px;
+}
+
+/* VS */
+.vs {
+    font-weight: bold;
+    color: #38bdf8;
+}
+
+/* Button */
+button {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+
+    background: linear-gradient(45deg, #3b82f6, #06b6d4);
+    color: white;
+    font-weight: 500;
+
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Back Button */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    background: #ef4444;
+    padding: 8px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 13px;
+}
+
+/* Result Section */
+.result-section {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+/* Car Box */
+.car-box {
+    flex: 1;
+    padding: 15px;
+    border-radius: 15px;
+
+    background: rgba(255,255,255,0.06);
+    transition: 0.3s;
+}
+
+.car-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Winner Highlight */
+.highlight {
+    border: 2px solid #22c55e;
+}
+
+/* Mobile Responsive */
+@media(max-width: 600px) {
+    .compare-form {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}
