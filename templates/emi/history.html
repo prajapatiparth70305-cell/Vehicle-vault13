@@ -56,26 +56,44 @@ h2 {
     font-weight: 500;
 }
 
+/* STATUS COLORS */
+.status-paid {
+    color: #00e676;
+    font-weight: bold;
+}
+
+.status-warning {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-overdue {
+    color: #ff5252;
+    font-weight: bold;
+}
+
 .btn {
     margin-top: 10px;
     display: inline-block;
     padding: 7px 12px;
-    background: red;
     border-radius: 8px;
     color: white;
     text-decoration: none;
+    background: red;
 }
+
+.pay {
+    background: #00c853;
+}
+
 .back-btn {
     display: inline-block;
-    margin-bottom: 15px;
+    margin-top: 10px;
     padding: 8px 14px;
     background: #444;
     border-radius: 8px;
     color: white;
     text-decoration: none;
-}
-.pay {
-    background: #00c853;
 }
 </style>
 </head>
@@ -98,7 +116,7 @@ h2 {
             </div>
 
             <div class="item">
-                <div class="label">Car name</div>
+                <div class="label">Car Name</div>
                 <div class="value">{{ item.car_name|default:"No Car" }}</div>
             </div>
 
@@ -108,15 +126,51 @@ h2 {
             </div>
 
             <div class="item">
-                <div class="label">Date</div>
-                <div class="value">{{ item.date }}</div>
+                <div class="label">Purchase Date</div>
+                <div class="value">
+                    {{ item.created_at|date:"d M Y"|default:"N/A" }}
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="label">Next Due</div>
+                <div class="value">
+                    {{ item.next_due_date|date:"d M Y"|default:"Not Set" }}
+                </div>
+            </div>
+
+            <!-- 🔥 STATUS WITH COLOR -->
+            <div class="item">
+                <div class="label">Status</div>
+
+                {% if item.get_status == "Overdue ❌" %}
+                    <div class="value status-overdue">{{ item.get_status }}</div>
+
+                {% elif item.get_status == "Due Soon ⚠️" %}
+                    <div class="value status-warning">{{ item.get_status }}</div>
+
+                {% else %}
+                    <div class="value status-paid">{{ item.get_status }}</div>
+                {% endif %}
+
             </div>
 
         </div>
 
+        <!-- ACTION BUTTONS -->
         <a href="{% url 'view_history' item.id %}" class="btn">View</a>
         <a href="{% url 'delete_history' item.id %}" class="btn">Delete</a>
-        <a href="{% url 'next_emi' item.id %}" class="btn pay">Pay Next EMI</a>
+
+        <!-- 🔥 PAY NOW AUTO LOGIC -->
+        {% if item.get_status == "Due Soon ⚠️" or item.get_status == "Overdue ❌" %}
+            <a href="{% url 'next_emi' item.id %}" class="btn pay">
+                Pay Now 💳
+            </a>
+        {% else %}
+            <span style="color:gray; margin-left:10px;">No Action</span>
+        {% endif %}
+
+        <br>
         <a href="/core/cars/" class="back-btn">⬅ Back</a>
 
     </div>

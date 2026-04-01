@@ -9,6 +9,10 @@ from django.core.mail import send_mail,EmailMultiAlternatives, EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.urls import reverse
 from django.http import HttpResponse
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, A4
@@ -42,11 +46,28 @@ def signup(request):
 
             # ✅ Email send
         send_mail(
-                "Your OTP Code",
-                f"Your OTP is {otp}",
-                "your@email.com",
-                [user.email],
-            )
+    "🚗 Welcome to Vehicle Vault - Verify Your Account",
+    f"""
+Hello {user.email},
+
+🎉 Congratulations! Your signup is successful.
+
+Welcome to Vehicle Vault 🚗
+
+To verify your account, use the OTP below:
+
+🔐 OTP: {otp}
+
+⏱ This OTP is valid for 30 seconds.
+
+⚠️ Do not share this OTP with anyone.
+
+Thank you,
+Vehicle Vault Team
+""",
+    "your@email.com",
+    [user.email],
+)
 
             # ❌ remove this
             # return redirect('login')
@@ -101,20 +122,47 @@ def dashboard(request):
 
     total_cars = Car.objects.count()
 
-   
-    purchased_cars = Purchase.objects.filter(user=request.user, is_insurance=False).count()
+    purchased_cars = Purchase.objects.filter(
+        user=request.user,
+        is_insurance=False
+    ).count()
 
-  
-    insurance_active = Purchase.objects.filter(user=request.user, is_insurance=True).count()
+    insurance_active = Purchase.objects.filter(
+        user=request.user,
+        is_insurance=True
+    ).count()
 
-   
     unread_count = request.user.notifications.filter(is_read=False).count()
+
+    # 🔥 EMI DASHBOARD LOGIC
+    emis = EMIHistory.objects.all()
+
+    total_paid = 0
+    total_due = 0
+    overdue = 0
+
+    today = timezone.now().date()
+
+    for emi in emis:
+        if emi.next_due_date:
+            if today > emi.next_due_date:
+                overdue += 1
+                total_due += emi.amount
+            elif emi.next_due_date - today <= timedelta(days=3):
+                total_due += emi.amount
+            else:
+                total_paid += emi.amount
 
     return render(request, 'dashboard.html', {
         'total_cars': total_cars,
         'purchased_cars': purchased_cars,
         'insurance_active': insurance_active,
-        'unread_count': unread_count
+        'unread_count': unread_count,
+
+        # 🔥 EMI DATA
+        'total_paid': total_paid,
+        'total_due': total_due,
+        'overdue': overdue,
     })
 
 def user_logout(request):
@@ -206,9 +254,6 @@ def buy_car(request, id):
     
 
     return render(request, 'buy_car.html', {'car': car})
-
-from django.core.mail import send_mail
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def payment_success(request, car_id):
@@ -356,11 +401,15 @@ def add_to_cart(request, id):
 
     return redirect('cart_page')
 
-@login_required
 def cart_page(request):
     cart_items = Cart.objects.filter(user=request.user)
-    return render(request, 'cart.html', {'cart_items': cart_items})
 
+    total_price = sum(item.car.price for item in cart_items)
+
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price
+    })
 
 
 def remove_from_cart(request, id):
@@ -369,21 +418,23 @@ def remove_from_cart(request, id):
     return redirect('cart_page')
 
 
-
-
-
 def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
 
         try:
-            user = User.objects.get(email=email)
-            request.session['reset_user'] = user.id
-            return redirect('reset_password')
-        except User.DoesNotExist:
-            messages.error(request, "Email not found")
+            user = User.objects.get(email__iexact=email.strip())
 
-    return render(request, 'forgot_password.html')
+            # ✅ Save BOTH email + user id
+            request.session['reset_user'] = user.id
+            request.session['reset_email'] = user.email
+
+            return redirect('reset_password')
+
+        except User.DoesNotExist:
+            messages.error(request, "Email not registered")
+
+    return render(request, 'password/forgot_password.html')
 
 
 def reset_password(request):
@@ -393,6 +444,12 @@ def reset_password(request):
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm = request.POST.get('confirm')
+        email = request.POST.get('email')  # 👈 user se dubara email lo
+
+        # ✅ Check email matches session email
+        if email != request.session.get('reset_email'):
+            messages.error(request, "Email does not match")
+            return redirect('reset_password')
 
         if password == confirm:
             user = User.objects.get(id=request.session['reset_user'])
@@ -400,11 +457,14 @@ def reset_password(request):
             user.save()
 
             del request.session['reset_user']
+            del request.session['reset_email']
+
+            messages.success(request, "Password updated successfully")
             return redirect('login')
         else:
             messages.error(request, "Passwords do not match")
 
-    return render(request, 'reset_password.html')
+    return render(request, 'password/reset_password.html')
 
 def insurance_page(request, car_id):
     car = Car.objects.get(id=car_id)
@@ -451,14 +511,25 @@ def insurance_success(request, car_id):
 
     car = Car.objects.get(id=car_id)
 
-    # 🔥 SAVE IN DATABASE
-    Purchase.objects.create(
+    # 🔥 PLAN BASED EXPIRY
+    if plan == "Basic":
+        expiry = timezone.now() + timedelta(days=365)
+    elif plan == "Standard":
+        expiry = timezone.now() + timedelta(days=365*2)
+    elif plan == "Premium":
+        expiry = timezone.now() + timedelta(days=365*3)
+    else:
+        expiry = timezone.now()
+
+    # 🔥 SAVE
+    purchase = Purchase.objects.create(
         user=request.user,
         car=car,
         amount=amount,
         status="Paid",
         is_insurance=True,
-        insurance_plan=plan
+        insurance_plan=plan,
+        expiry_date=expiry
     )
 
     create_notification(
@@ -467,7 +538,7 @@ def insurance_success(request, car_id):
         "success"
     )
 
-    # ✅ 👉 YAHAN EMAIL ADD KARO (IMPORTANT PART)
+    # 🔥 EMAIL (with expiry)
     subject = "Insurance Purchase Successful 🚗"
     message = f"""
 Hello {request.user.email},
@@ -477,6 +548,7 @@ Your insurance has been successfully purchased!
 Car: {car.name}
 Plan: {plan}
 Amount Paid: ₹{amount}
+Expiry Date: {expiry.strftime('%d %b %Y')}
 
 Drive safe! 🛡️
 Vehicle Vault Team
@@ -490,12 +562,12 @@ Vehicle Vault Team
         fail_silently=False
     )
 
-    # 👇 FINAL RESPONSE
     return render(request, 'insurance/success.html', {
         'user': request.user,
         'car': car,
         'plan': plan,
-        'amount': amount
+        'amount': amount,
+        'expiry': expiry
     })
 
 @login_required
@@ -504,6 +576,14 @@ def insurance_history(request):
         user=request.user,
         is_insurance=True
     )
+
+    # 🔥 CHECK EXPIRED
+    for p in purchases:
+        if p.expiry_date and p.expiry_date < timezone.now().date():
+            if not p.is_expired:
+                p.is_expired = True
+                p.status = "Expired"
+                p.save()
 
     return render(request, 'insurance/history.html', {
         'purchases': purchases
@@ -546,7 +626,7 @@ def mark_as_read(request, id):
 def delete_notification(request, id):
     notification = get_object_or_404(Notification, id=id, user=request.user)
     notification.delete()
-    return redirect('dashboard')
+    return redirect('notifications')
 
 def emi_page(request):
     car_name = request.GET.get("car")
@@ -555,30 +635,26 @@ def emi_page(request):
     # ✅ SAVE IN SESSION (IMPORTANT)
     request.session['car_name'] = car_name
 
-    return render(request, "core/emi.html", {
+    return render(request, "emi/emi.html", {
         "car_name": car_name,
         "price": price
     })
 
-
-# SUCCESS PAGE (SAVE DATA)
 def success_page(request):
     payment_id = request.GET.get("payment_id")
     amount = request.GET.get("amount")
 
-    # ✅ SESSION DATA
     car_name = request.session.get("car_name")
 
-    print("CAR NAME:", car_name)
-
     if payment_id:
-        EMIHistory.objects.create(
+        emi = EMIHistory.objects.create(
             payment_id=payment_id,
             amount=amount,
-            car_name=car_name
+            car_name=car_name,
+            next_due_date=timezone.now().date() + timedelta(days=30)  
         )
 
-        # ✅ 👉 EMAIL YAHAN ADD KARO
+        # EMAIL SAME रहेगा
         if request.user.is_authenticated:
             subject = "EMI Payment Successful 💳"
             message = f"""
@@ -589,10 +665,10 @@ Your EMI payment has been successfully completed!
 Car: {car_name}
 Payment ID: {payment_id}
 Amount Paid: ₹{amount}
+Next Due Date: {emi.next_due_date}
 
-Thank you for choosing This Car 🚗
+Thank you 🚗
 """
-
             send_mail(
                 subject,
                 message,
@@ -601,13 +677,14 @@ Thank you for choosing This Car 🚗
                 fail_silently=False
             )
 
-    return render(request, "core/success.html")
+    return render(request, "emi/success.html")
 
 
-# HISTORY PAGE
+
 def history_page(request):
     data = EMIHistory.objects.all().order_by('-id')
-    return render(request, "core/history.html", {"data": data})
+
+    return render(request, "emi/history.html", {"data": data})
 
 
 # DELETE
@@ -620,16 +697,14 @@ def delete_history(request, id):
 # VIEW SINGLE
 def view_history(request, id):
     data = EMIHistory.objects.get(id=id)
-    return render(request, "core/view.html", {"item": data})
+    return render(request, "emi/view.html", {"item": data})
 
 
-# NEXT EMI PAYMENT
 def next_emi(request, id):
     client = razorpay.Client(auth=("rzp_test_SRMYrgg9z1ynoY", "H8Fzo9bxZA2Kh5LmFFiToIb3"))
 
     emi = EMIHistory.objects.get(id=id)
 
-    # ✅ SAVE AGAIN IN SESSION
     request.session['car_name'] = emi.car_name
 
     amount = emi.amount * 100
@@ -640,7 +715,7 @@ def next_emi(request, id):
         "payment_capture": "1"
     })
 
-    return render(request, "core/emipay.html", {
+    return render(request, "emi/emipay.html", {
         "payment": payment,
         "emi": emi,
         "razorpay_key": "rzp_test_SRMYrgg9z1ynoY"

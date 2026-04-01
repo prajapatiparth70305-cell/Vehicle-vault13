@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
+from datetime import timedelta
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -118,6 +120,9 @@ class Purchase(models.Model):
 
     is_insurance = models.BooleanField(default=False,null=True)
     insurance_plan = models.CharField(max_length=50, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    expiry_date = models.DateField(null=True, blank=True)
+    is_expired = models.BooleanField(default=False,null=True)
     def _str_(self):
         return self.car_name
 
@@ -160,6 +165,24 @@ class EMIHistory(models.Model):
     amount = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)
     car_name=models.CharField(max_length=100,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    next_due_date = models.DateField(null=True, blank=True)
+    is_paid = models.BooleanField(default=False,null=True)
+    total_emi = models.IntegerField(null=True, blank=True)
+    paid_emi = models.IntegerField(null=True, blank=True)
+
+    def get_status(self):
+        today = timezone.now().date()
+
+        if self.next_due_date:
+            if today > self.next_due_date:
+                return "Overdue ❌"
+            elif self.next_due_date - today <= timedelta(days=3):
+                return "Due Soon ⚠️"
+            else:
+                return "Paid ✅"
+
+        return "Not Set"
 
     def _str_(self):
         return self.payment_id 

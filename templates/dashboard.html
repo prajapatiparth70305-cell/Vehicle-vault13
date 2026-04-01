@@ -118,6 +118,19 @@
             color: white;
         }
 
+        /* 🔥 EMI COLORS */
+        .emi-paid {
+            background: linear-gradient(135deg, #00c853, #64dd17);
+        }
+
+        .emi-due {
+            background: linear-gradient(135deg, #ff9800, #ffc107);
+        }
+
+        .emi-overdue {
+            background: linear-gradient(135deg, #ff1744, #ff5252);
+        }
+
         /* 💎 EXTRA SECTION */
         .extra {
             margin-top: 40px;
@@ -151,7 +164,7 @@
         <a href="{% url 'logout' %}">🚪 Logout</a>
     </div>
 
-    
+    <!-- 🟡 MAIN -->
     <div class="main">
 
         <!-- HEADER -->
@@ -170,7 +183,7 @@
             </div>
         </div>
 
-
+        <!-- 🔹 MAIN CARDS -->
         <div class="cards">
 
             <a href="{% url 'cars' %}" class="card-link">
@@ -196,7 +209,33 @@
 
         </div>
 
-        <!-- 💎 EXTRA SECTION -->
+        <!-- 🔥 EMI SECTION -->
+        <div class="cards">
+
+            <a href="/core/history/" class="card-link">
+                <div class="card emi-paid">
+                    <h3>💳 EMI Paid</h3>
+                    <p>₹ {{ total_paid }}</p>
+                </div>
+            </a>
+
+            <a href="/core/history/" class="card-link">
+                <div class="card emi-due">
+                    <h3>📅 EMI Due</h3>
+                    <p>₹ {{ total_due }}</p>
+                </div>
+            </a>
+
+            <a href="/core/history/" class="card-link">
+                <div class="card emi-overdue">
+                    <h3>⚠️ Overdue EMI</h3>
+                    <p>{{ overdue }}</p>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- 💎 EXTRA -->
         <div class="extra">
 
             <div class="box">
