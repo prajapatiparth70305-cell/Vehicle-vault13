@@ -72,6 +72,7 @@ button {
     margin-top: 15px;
     font-size: 18px;
     font-weight: bold;
+    white-space: pre-line;
 }
 </style>
 </head>
@@ -92,9 +93,11 @@ button {
 
     <input type="number" id="amount" placeholder="Loan Amount" readonly>
 
-    <input type="number" id="rate" placeholder="Interest Rate (%)">
+    <input type="number" id="rate" placeholder="Interest Rate (%) e.g. 10">
 
-    <input type="number" id="years" placeholder="Years">
+    <input type="number" id="years" placeholder="Years (e.g. 5, 10, 15)">
+
+    <input type="hidden" id="total_emi">
 
     <button class="calc" onclick="calculateEMI()">Calculate EMI</button>
 
@@ -105,12 +108,13 @@ button {
 
 <script>
 
+let finalEMI = 0; // ✅ store EMI safely
+
 function updateLoan() {
     let price = parseInt(document.getElementById("price").value) || 0;
     let down = parseInt(document.getElementById("down").value) || 0;
 
     let loan = price - down;
-
     if (loan < 0) loan = 0;
 
     document.getElementById("amount").value = loan;
@@ -119,44 +123,67 @@ function updateLoan() {
 function calculateEMI() {
 
     let loan = parseInt(document.getElementById("amount").value);
-    let R = document.getElementById("rate").value / 12 / 100;
-    let N = document.getElementById("years").value * 12;
+    let rateInput = parseFloat(document.getElementById("rate").value);
+    let years = parseInt(document.getElementById("years").value);
 
-    if (!loan || !R || !N) {
+    if (!loan || !rateInput || !years) {
         alert("Fill all fields ❗");
         return;
     }
 
+    if (rateInput > 20) {
+        alert("Interest too high ❗");
+        return;
+    }
+
+    if (years <= 0 || years > 20) {
+        alert("Enter valid years (1-20)");
+        return;
+    }
+
+    let R = rateInput / 12 / 100;
+    let N = years * 12;
+
+    document.getElementById("total_emi").value = N;
+
     let EMI = (loan * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
 
-    document.getElementById("result").innerText = "EMI: ₹" + Math.round(EMI);
+    finalEMI = Math.round(EMI); // ✅ store correct EMI
+
+    let totalPayment = finalEMI * N;
+
+    document.getElementById("result").innerText =
+        "Monthly EMI: ₹" + finalEMI +
+        "\nTotal Payment: ₹" + totalPayment +
+        "\nDuration: " + years + " Years";
 }
 
 function payNow() {
 
-    let emiText = document.getElementById("result").innerText;
-    let amount = parseInt(emiText.replace(/\D/g, ''));
+    let totalEMI = document.getElementById("total_emi").value;
 
-    if (!amount) {
+    if (!finalEMI || !totalEMI) {
         alert("Calculate EMI first ❗");
         return;
     }
 
     var options = {
         "key": "rzp_test_SRMYrgg9z1ynoY",
-        "amount": amount * 100,
+        "amount": finalEMI * 100, // ✅ correct (1 EMI only)
         "currency": "INR",
         "name": "Vehicle Vault",
-        "description": "EMI Payment",
+        "description": "Monthly EMI Payment",
 
         handler: function (response) {
-            window.location.href = `/core/success/?payment_id=${response.razorpay_payment_id}&amount=${amount}`;
+            window.location.href =
+                `/core/success/?payment_id=${response.razorpay_payment_id}&amount=${finalEMI}&total_emi=${totalEMI}`;
         }
     };
 
     var rzp = new Razorpay(options);
     rzp.open();
 }
+
 </script>
 
 </body>

@@ -17,7 +17,6 @@ body {
     align-items: center;
 }
 
-/* Main Card */
 .card {
     width: 380px;
     padding: 35px;
@@ -27,15 +26,8 @@ body {
     box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     color: white;
     text-align: center;
-    animation: fadeIn 0.6s ease-in-out;
 }
 
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-
-/* Header */
 .title {
     font-size: 28px;
     font-weight: 600;
@@ -48,7 +40,6 @@ body {
     margin-bottom: 25px;
 }
 
-/* EMI Amount Big */
 .amount {
     font-size: 40px;
     font-weight: bold;
@@ -56,7 +47,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Info box */
 .info {
     text-align: left;
     margin-top: 15px;
@@ -71,7 +61,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Status badge */
 .status {
     margin-top: 15px;
     display: inline-block;
@@ -83,7 +72,6 @@ body {
     font-weight: bold;
 }
 
-/* Buttons */
 .buttons {
     margin-top: 25px;
 }
@@ -95,22 +83,11 @@ body {
     margin: 5px;
     display: inline-block;
     font-size: 14px;
-    transition: 0.3s;
 }
 
 .back {
     background: linear-gradient(45deg, #ff4b2b, #ff416c);
     color: white;
-}
-
-.download {
-    background: linear-gradient(45deg, #00c6ff, #0072ff);
-    color: white;
-}
-
-.btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 </style>
 </head>
@@ -125,6 +102,7 @@ body {
     <div class="amount">₹{{ item.amount }}</div>
 
     <div class="info">
+
         <div class="row">
             <span>Payment ID</span>
             <span>{{ item.payment_id }}</span>
@@ -134,16 +112,33 @@ body {
             <span>Date</span>
             <span>{{ item.date }}</span>
         </div>
+
+        <!-- ✅ NEW EMI DATA -->
+        <div class="row">
+            <span>Total EMI</span>
+            <span>{{ item.total_emi }}</span>
+        </div>
+
+        <div class="row">
+            <span>Paid EMI</span>
+            <span>{{ item.paid_emi }}</span>
+        </div>
+
+        <div class="row">
+            <span>Remaining EMI</span>
+            <span>{{ item.remaining_emi }}</span>
+        </div>
+
     </div>
 
-    <!-- Status -->
-    <div class="status">PAID ✅</div>
-    
+    <!-- ✅ Dynamic Status -->
+    <div class="status">
+        {{ item.get_status }}
+    </div>
 
     <!-- Buttons -->
     <div class="buttons">
         <a href="/core/history/" class="btn back">⬅ Back</a>
-        
     </div>
 
 </div>

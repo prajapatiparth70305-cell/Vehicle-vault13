@@ -102,7 +102,12 @@ h2 {
 
 <div class="container">
 
+    <div class="header">
+        <a href="/core/cars/" class="back-btn">⬅ Back</a>
+    </div>
+
 <h2>💳 EMI History</h2>
+ 
 
 {% if data %}
     {% for item in data %}
@@ -170,9 +175,7 @@ h2 {
             <span style="color:gray; margin-left:10px;">No Action</span>
         {% endif %}
 
-        <br>
-        <a href="/core/cars/" class="back-btn">⬅ Back</a>
-
+       
     </div>
     {% endfor %}
 

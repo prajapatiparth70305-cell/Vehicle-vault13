@@ -643,6 +643,7 @@ def emi_page(request):
 def success_page(request):
     payment_id = request.GET.get("payment_id")
     amount = request.GET.get("amount")
+    total_emi = request.GET.get("total_emi")
 
     car_name = request.session.get("car_name")
 
@@ -651,7 +652,15 @@ def success_page(request):
             payment_id=payment_id,
             amount=amount,
             car_name=car_name,
+            total_emi=int(total_emi),
+            paid_emi=1,
             next_due_date=timezone.now().date() + timedelta(days=30)  
+        )
+
+        create_notification(
+            request.user,
+            f"Your emi purchased successfully 🎉",
+            "success"
         )
 
         # EMAIL SAME रहेगा

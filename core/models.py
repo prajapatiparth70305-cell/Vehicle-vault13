@@ -183,6 +183,9 @@ class EMIHistory(models.Model):
                 return "Paid ✅"
 
         return "Not Set"
+    
+    def remaining_emi(self):
+        return(self.total_emi or 0) - (self.paid_emi or 0)
 
     def _str_(self):
         return self.payment_id 
