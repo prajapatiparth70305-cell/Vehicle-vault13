@@ -57,30 +57,42 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.email
 
-class Vehicle(models.Model):
-    name = models.CharField(max_length=100,null=True)
-    brand = models.CharField(max_length=100,null=True)
-    price = models.IntegerField(null=True)
-    fuel_type = models.CharField(max_length=50,null=True)
-    mileage = models.CharField(max_length=50,null=True)
-    image = models.ImageField(upload_to='cars/',null=True)
-    description = models.TextField(null=True)
 
-    def _str_(self):
-        return self.name
     
     
 class Car(models.Model):
+
+
+    FUEL_CHOICES = [
+        ('petrol', 'Petrol'),
+        ('diesel', 'Diesel'),
+        ('cng', 'CNG'),
+        ('electric', 'Electric'),
+    ]
+
+    TRANSMISSION_CHOICES = [
+        ('manual', 'Manual'),
+        ('automatic', 'Automatic'),
+    ]
+
+    MODEL_CHOICES = [
+        ('EX', 'EX'),
+        ('SX ', 'SX'),
+        ('SX(O)', 'SX(O)'),
+        ('S', 'S'),
+    ]
     name = models.CharField(max_length=100)
     brand = models.CharField(max_length=100)
-    number = models.CharField(max_length=20,null=True)
-    fuel_type = models.CharField(max_length=20,null=True)
+    model= models.CharField(max_length=100,null=True,choices=MODEL_CHOICES)
+    fuel_type = models.CharField(max_length=20,null=True,choices=FUEL_CHOICES)
     price = models.IntegerField()
     mileage = models.FloatField(null=True)
-    image = models.ImageField(upload_to='cars/')
     seats = models.IntegerField(null=True, blank=True)
     features = models.TextField(null=True, blank=True)
     year =models.IntegerField(null=True)
+    transmission = models.CharField(max_length=20,null=True,choices=TRANSMISSION_CHOICES)
+    description = models.TextField(null=True)
+    image = models.ImageField(upload_to='cars/')
     def __str__(self):
         return self.name
 
@@ -88,6 +100,7 @@ class Car(models.Model):
 class TestDrive(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    pickup_location = models.CharField(max_length=255,null=True,blank=True)
     date = models.DateField()
     time = models.TimeField()
 

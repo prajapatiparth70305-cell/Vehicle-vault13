@@ -11,7 +11,6 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('cars/', views.cars, name='cars'),
     path('delete-car/<int:id>/', views.delete_car, name='delete_car'),
-    path('add-car/' , views.add_car,name='add_car'),
     path('car/<int:id>/', views.car_detail, name='car_detail'), 
     path('buy-car/<int:id>/', views.buy_car, name='buy_car'),
     path('payment-success/<int:car_id>/', views.payment_success, name='payment_success'),

@@ -1,142 +1,284 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Book Test Drive</title>
+    <title>Book Test Drive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #08111f;
+            --panel: rgba(255,255,255,0.08);
+            --panel-strong: rgba(255,255,255,0.14);
+            --border: rgba(148,163,184,0.18);
+            --text: #eef2ff;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-strong: #7c3aed;
+            --shadow: 0 28px 70px rgba(0,0,0,0.35);
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 18%),
+                        radial-gradient(circle at 90% 15%, rgba(168, 85, 247, 0.1), transparent 20%),
+                        linear-gradient(135deg, #08111f 0%, #111827 55%, #0b1220 100%);
+            color: var(--text);
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: 'Poppins', sans-serif;
-}
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 32%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
-body {
-    height:100vh;
-    background: linear-gradient(135deg,#141e30,#243b55);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
-}
+        .back-btn {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            color: var(--text);
+            text-decoration: none;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
 
-/* Glass Card */
-.container {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(15px);
-    padding:40px;
-    border-radius:20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-    width:350px;
-    text-align:center;
-}
+        .back-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(56, 189, 248, 0.18);
+        }
 
-/* Heading */
-h1 {
-    margin-bottom:20px;
-}
+        .page-shell {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
 
-/* Inputs */
-select, input {
-    width:100%;
-    padding:12px;
-    margin:10px 0;
-    border:none;
-    border-radius:10px;
-    background: rgba(255,255,255,0.15);
-    color:white;
-    font-size:14px;
-    outline:none;
-}
+        .booking-card {
+            width: min(520px, 100%);
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            backdrop-filter: blur(25px);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
 
-/* Placeholder color */
-input::placeholder {
-    color:#ddd;
-}
+        .hero-panel {
+            padding: 36px 28px 24px;
+            background: linear-gradient(180deg, rgba(56,189,248,0.16), rgba(59,130,246,0.08));
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
 
-/* Button */
-button {
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border:none;
-    border-radius:10px;
-    background: linear-gradient(45deg,#00c6ff,#0072ff);
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
+        .hero-panel h1 {
+            margin: 0;
+            font-size: clamp(2rem, 2.5vw, 2.4rem);
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+        }
 
-button:hover {
-    transform: scale(1.05);
-    box-shadow:0 5px 20px rgba(0,198,255,0.5);
-}
+        .hero-panel p {
+            margin: 14px 0 0;
+            color: var(--muted);
+            font-size: 0.96rem;
+            line-height: 1.7;
+        }
 
-/* Selected car text */
-#carName {
-    margin:10px 0;
-    font-size:14px;
-    color:#00eaff;
-}
+        .hero-panel .highlight {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.1);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
 
-/* Back button */
-.back-btn {
-    position:absolute;
-    top:20px;
-    left:20px;
-    text-decoration:none;
-    color:white;
-    background: rgba(255,255,255,0.1);
-    padding:8px 15px;
-    border-radius:8px;
-    transition:0.3s;
-}
+        form {
+            padding: 28px 28px 32px;
+            display: grid;
+            gap: 18px;
+        }
 
-.back-btn:hover {
-    background:#00c6ff;
-}
+        label {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
 
-</style>
+        select,
+        input {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+            padding: 14px 16px;
+            font-size: 0.98rem;
+            outline: none;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
 
-<script>
-function showCarName() {
-    let select = document.getElementById("car");
-    let selectedText = select.options[select.selectedIndex].text;
-    document.getElementById("carName").innerText = "🚘 Selected Car: " + selectedText;
-}
-</script>
+        select:focus,
+        input:focus {
+            border-color: rgba(56,189,248,0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 30px rgba(56,189,248,0.12);
+        }
 
+        input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .selected-car {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--accent);
+            font-weight: 600;
+            min-height: 52px;
+        }
+
+        .selected-car span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(56,189,248,0.18);
+            color: #38bdf8;
+        }
+
+        .button-group {
+            display: grid;
+            gap: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            border: none;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 32px rgba(56,189,248,0.22);
+        }
+
+        @media (max-width: 560px) {
+            .booking-card {
+                width: 100%;
+                border-radius: 24px;
+            }
+
+            .hero-panel {
+                padding: 28px 20px 20px;
+            }
+
+            form {
+                padding: 22px 20px 26px;
+            }
+
+            .back-btn {
+                top: 18px;
+                left: 18px;
+            }
+        }
+    </style>
+    <script>
+        function showCarName() {
+            const select = document.getElementById('car');
+            const selectedText = select.options[select.selectedIndex].text;
+            const output = document.getElementById('carName');
+            output.textContent = selectedText ? `🚘 Selected Car: ${selectedText}` : 'No car selected yet';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.querySelector('input[name="date"]');
+            if (dateInput) {
+                dateInput.setAttribute('min', today);
+            }
+            showCarName();
+        });
+    </script>
 </head>
-
 <body>
-
-<a href="javascript:history.back()" class="back-btn">⬅ Back</a>
-
-<div class="container">
-    <h1>🚗 Book Test Drive</h1>
-
-    <form method="POST">
-        {% csrf_token %}
-
-        <select name="car" id="car" onchange="showCarName()" required>
-            <option value="">Select Car</option>
-            {% for car in cars %}
-            <option value="{{ car.id }}">{{ car.name }}</option>
-            {% endfor %}
-        </select>
-
-        <p id="carName"></p>
-        <input type="text" name="name" placeholder="Your Name" required>
-        <input type="date" name="date" required>
-        <input type="time" name="time" required>
-
-        <button type="submit">Confirm Booking</button>
-    </form>
-</div>
-
+    <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+    <div class="page-shell">
+        <section class="booking-card">
+            <div class="hero-panel">
+                <h1>🚗 Book Test Drive</h1>
+                <p>Choose your preferred car, pick a convenient date and time, and confirm your booking instantly.</p>
+                <div class="highlight"><span>Quick booking</span><span>Secure</span><span>Instant confirmation</span></div>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div>
+                    <label for="car">Select Car</label>
+                    <select name="car" id="car" onchange="showCarName()" required>
+                        <option value="">Select Car</option>
+                        {% for car in cars %}
+                        <option value="{{ car.id }}">{{ car.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="selected-car" id="carName"><span>🚘</span>No car selected yet</div>
+                <div>
+                    <label for="name">Your Name</label>
+                    <input type="text" name="name" id="name" placeholder="Your Name" required>
+                </div>
+                <div>
+                    <label for="location">Pickup Location</label>
+                    <input type="text" name="location" id="location" placeholder="Enter pickup location" required>
+                </div>
+                <div>
+                    <label for="date">Preferred Date</label>
+                    <input type="date" name="date" id="date" required>
+                </div>
+                <div>
+                    <label for="time">Preferred Time</label>
+                    <input type="time" name="time" id="time" required>
+                </div>
+                <div class="button-group">
+                    <button type="submit">Confirm Booking</button>
+                </div>
+            </form>
+        </section>
+    </div>
 </body>
 </html>

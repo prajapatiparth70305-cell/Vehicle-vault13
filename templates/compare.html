@@ -7,236 +7,364 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-        body{
-            margin:0;
-            font-family:'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color:white;
+        :root {
+            color-scheme: dark;
+            --bg: #08111f;
+            --panel: rgba(255,255,255,0.08);
+            --panel-strong: rgba(255,255,255,0.12);
+            --border: rgba(148,163,184,0.2);
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-strong: #818cf8;
+            --shadow: 0 24px 70px rgba(0,0,0,0.35);
         }
 
-        .container{
-            max-width:1000px;
-            margin:60px auto;
-            padding:30px;
-            border-radius:20px;
-            backdrop-filter: blur(20px);
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            background: radial-gradient(circle at top left, rgba(56,189,248,0.18), transparent 18%),
+                        radial-gradient(circle at 80% 10%, rgba(168,85,247,0.12), transparent 18%),
+                        linear-gradient(135deg, #0f172a 0%, #111827 55%, #0b1220 100%);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .exit-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 22px;
+            border-radius: 999px;
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+            color: white;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .exit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 26px 60px rgba(220,38,38,0.26);
+        }
+
+        .page-shell {
+            position: relative;
+            z-index: 1;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 60px 20px 80px;
+        }
+
+        .container {
+            border-radius: 32px;
+            padding: 40px 36px;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            position: relative;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .hero h2 {
+            margin: 0;
+            font-size: clamp(2rem, 2.5vw, 2.6rem);
+            letter-spacing: -0.045em;
+        }
+
+        .hero .subtitle {
+            margin: 12px auto 0;
+            max-width: 640px;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .compare-form {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .compare-form select,
+        .compare-form button {
+            width: 100%;
+        }
+
+        select {
+            appearance: none;
+            padding: 14px 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(30,41,59,0.9);
+            color: var(--text);
+            font-size: 0.98rem;
+            outline: none;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        select:focus {
+            border-color: rgba(56,189,248,0.4);
+            transform: translateY(-1px);
+        }
+
+        .compare-form button {
+            padding: 14px 22px;
+            border-radius: 18px;
+            border: none;
+            background: linear-gradient(135deg, #38bdf8, #6366f1);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .compare-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 32px rgba(56,189,248,0.2);
+        }
+
+        .compare-result {
+            margin-top: 42px;
+            display: grid;
+            grid-template-columns: 1fr minmax(120px, 160px) 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            border-radius: 28px;
+            overflow: hidden;
             background: rgba(255,255,255,0.08);
-            box-shadow:0 8px 32px rgba(0,0,0,0.4);
-            text-align:center;
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+            transition: transform 0.3s ease;
         }
 
-        h2{
-            margin-bottom:10px;
+        .card:hover {
+            transform: translateY(-6px);
         }
 
-        .subtitle{
-            color:#cbd5f5;
-            font-size:14px;
-            margin-bottom:25px;
+        .card-image {
+            position: relative;
+            min-height: 220px;
+            background: linear-gradient(180deg, rgba(59,130,246,0.16), rgba(15,23,42,0.84));
         }
 
-        form{
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            gap:15px;
-            flex-wrap:wrap;
+        .card-image img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
         }
 
-        select{
-            padding:12px;
-            border-radius:10px;
-            border:none;
-            outline:none;
-            min-width:180px;
-            background:#1e293b;
-            color:white;
+        .card-body {
+            padding: 24px 22px 26px;
         }
 
-        button{
-            padding:12px 25px;
-            border:none;
-            border-radius:12px;
-            background: linear-gradient(135deg, #3b82f6, #06b6d4);
-            color:white;
-            font-weight:600;
-            cursor:pointer;
-            transition:0.3s;
+        .card-title {
+            margin: 0 0 10px;
+            font-size: 1.4rem;
         }
 
-        button:hover{
-            transform:scale(1.05);
-            box-shadow:0 0 20px rgba(59,130,246,0.6);
+        .card-meta {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
 
-        /* Table → Premium Card Style */
-        .compare-result{
-            margin-top:40px;
-            display:flex;
-            gap:20px;
-            justify-content:center;
-            flex-wrap:wrap;
+        .stat-list {
+            display: grid;
+            gap: 14px;
         }
 
-        .card{
-            width:280px;
-            padding:20px;
-            border-radius:15px;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            box-shadow:0 5px 20px rgba(0,0,0,0.3);
-            transition:0.3s;
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(15,23,42,0.85);
+            border: 1px solid rgba(255,255,255,0.06);
         }
 
-        .card:hover{
-            transform:translateY(-5px);
+        .stat-item span:first-child {
+            color: var(--muted);
+            font-size: 0.95rem;
         }
 
-        .card h3{
-            margin-bottom:15px;
+        .stat-item span:last-child {
+            color: var(--text);
+            font-weight: 700;
         }
 
-        .feature{
-            display:flex;
-            justify-content:space-between;
-            padding:8px 0;
-            border-bottom:1px solid rgba(255,255,255,0.1);
+        .vs-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+            border-radius: 28px;
+            background: rgba(56,189,248,0.08);
+            border: 1px dashed rgba(56,189,248,0.25);
+            color: var(--accent);
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
         }
 
-        .feature:last-child{
-            border:none;
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
         }
 
-        .label{
-            color:#94a3b8;
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(56,189,248,0.14);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.88rem;
         }
 
-        /* Exit Button */
-        .exit-btn{
-            position:absolute;
-            top:20px;
-            right:20px;
-            background: linear-gradient(45deg,#ff4d4d,#ff0000);
-            color:white;
-            padding:12px 25px;
-            border-radius:25px;
-            text-decoration:none;
-            font-size:14px;
-            font-weight:bold;
-            box-shadow:0 5px 15px rgba(0,0,0,0.3);
-            transition:0.3s;
-        }
+        @media (max-width: 920px) {
+            .compare-result {
+                grid-template-columns: 1fr;
+            }
 
-        .exit-btn:hover{
-            transform:translateY(-3px) scale(1.05);
-            box-shadow:0 10px 20px rgba(0,0,0,0.4);
-        }
-
-        @media(max-width:768px){
-            form{
-                flex-direction:column;
+            .vs-badge {
+                width: 100%;
+                min-height: auto;
+                padding: 28px 0;
             }
         }
 
+        @media (max-width: 680px) {
+            .compare-form {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 28px 24px;
+            }
+        }
     </style>
 </head>
 
 <body>
-
 <a href="{% url 'dashboard' %}" class="exit-btn">❌ Exit</a>
-
-<div class="container">
-
-    <h2>🚗 Compare Cars Like a Pro</h2>
-    <p class="subtitle">Find the best car for you</p>
-
-    <form method="get">
-        <select name="car1">
-            <option>Select Car 1</option>
-            {% for car in cars %}
-            <option value="{{car.id}}">{{car.name}}</option>
-            {% endfor %}
-        </select>
-
-        <select name="car2">
-            <option>Select Car 2</option>
-            {% for car in cars %}
-            <option value="{{car.id}}">{{car.name}}</option>
-            {% endfor %}
-        </select>
-
-        <button type="submit">Compare</button>
-    </form>
-
-    {% if car1 and car2 %}
-
-    <div class="compare-result">
-
-        <!-- Car 1 -->
-        <div class="card">
-            <h3>{{car1.name}}</h3>
-
-            <div class="feature">
-                <span class="label">Brand</span>
-                <span>{{car1.brand}}</span>
-            </div>
-
-            <div class="feature">
-                <span class="label">Price</span>
-                <span>{{car1.price}}</span>
-            </div>
-
-            <div class="feature">
-                <span class="label">Model</span>
-                <span>{{car1.model}}</span>
-            </div>
-
-            <div class="feature">
-                <span class="label">Mileage</span>
-                <span>{{car1.mileage}}</span>
-            </div>
-
-            <div class="feature">
-                <span class="label">Fuel</span>
-                <span>{{car1.fuel_type}}</span>
-            </div>
+<div class="page-shell">
+    <div class="container">
+        <div class="hero">
+            <h2>🚗 Compare Cars Like a Pro</h2>
+            <p class="subtitle">Quickly compare two cars side-by-side so you can choose the perfect match for your budget and driving style.</p>
         </div>
 
-        <!-- Car 2 -->
-        <div class="card">
-            <h3>{{car2.name}}</h3>
+        <form class="compare-form" method="get">
+            <select name="car1">
+                <option value="">Select Car 1</option>
+                {% for car in cars %}
+                <option value="{{ car.id }}" {% if car1 and car.id == car1.id %}selected{% endif %}>{{ car.name }}</option>
+                {% endfor %}
+            </select>
 
-            <div class="feature">
-                <span class="label">Brand</span>
-                <span>{{car2.brand}}</span>
+            <select name="car2">
+                <option value="">Select Car 2</option>
+                {% for car in cars %}
+                <option value="{{ car.id }}" {% if car2 and car.id == car2.id %}selected{% endif %}>{{ car.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Compare</button>
+        </form>
+
+        {% if car1 and car2 %}
+        <div class="compare-result">
+            <div class="card">
+                <div class="card-image">
+                    {% if car1.image %}
+                    <img src="{{ car1.image.url }}" alt="{{ car1.name }}">
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ car1.name }}</h3>
+                    <p class="card-meta">{{ car1.brand }} · {{ car1.model }} · {{ car1.year }}</p>
+                    <div class="stat-list">
+                        <div class="stat-item"><span>Price</span><span>₹ {{ car1.price }}</span></div>
+                        <div class="stat-item"><span>Mileage</span><span>{{ car1.mileage }} kmpl</span></div>
+                        <div class="stat-item"><span>Fuel Type</span><span>{{ car1.fuel_type }}</span></div>
+                        <div class="stat-item"><span>Transmission</span><span>{{ car1.transmission }}</span></div>
+                        <div class="stat-item"><span>Seats</span><span>{{ car1.seats }}</span></div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="tag">Year {{ car1.year }}</span>
+                        <span class="tag">{{ car1.fuel_type }}</span>
+                        <span class="tag">{{ car1.transmission }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="feature">
-                <span class="label">Price</span>
-                <span>{{car2.price}}</span>
-            </div>
+            <div class="vs-badge">VS</div>
 
-            <div class="feature">
-                <span class="label">Model</span>
-                <span>{{car2.model}}</span>
-            </div>
-
-            <div class="feature">
-                <span class="label">Mileage</span>
-                <span>{{car2.mileage}}</span>
-            </div>
-
-            <div class="feature">
-                <span class="label">Fuel</span>
-                <span>{{car2.fuel_type}}</span>
+            <div class="card">
+                <div class="card-image">
+                    {% if car2.image %}
+                    <img src="{{ car2.image.url }}" alt="{{ car2.name }}">
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ car2.name }}</h3>
+                    <p class="card-meta">{{ car2.brand }} · {{ car2.model }} · {{ car2.year }}</p>
+                    <div class="stat-list">
+                        <div class="stat-item"><span>Price</span><span>₹ {{ car2.price }}</span></div>
+                        <div class="stat-item"><span>Mileage</span><span>{{ car2.mileage }} kmpl</span></div>
+                        <div class="stat-item"><span>Fuel Type</span><span>{{ car2.fuel_type }}</span></div>
+                        <div class="stat-item"><span>Transmission</span><span>{{ car2.transmission }}</span></div>
+                        <div class="stat-item"><span>Seats</span><span>{{ car2.seats }}</span></div>
+                    </div>
+                    <div class="feature-tags">
+                        <span class="tag">Year {{ car2.year }}</span>
+                        <span class="tag">{{ car2.fuel_type }}</span>
+                        <span class="tag">{{ car2.transmission }}</span>
+                    </div>
+                </div>
             </div>
         </div>
-
+        {% endif %}
     </div>
-
-    {% endif %}
-
 </div>
-
 </body>
 </html>

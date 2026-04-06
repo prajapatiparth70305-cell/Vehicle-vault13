@@ -8,11 +8,6 @@ from django.contrib import messages
 from django.core.mail import send_mail,EmailMultiAlternatives, EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth.tokens import default_token_generator
-from django.urls import reverse
 from django.http import HttpResponse
 from io import BytesIO
 from reportlab.lib.pagesizes import letter, A4
@@ -21,7 +16,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from reportlab.lib import colors
 from .models import Car,Purchase,Invoice,Cart,Notification,EMIHistory,TestDrive
-from .forms import CarForm
 import razorpay,random
 from django.utils import timezone
 from datetime import timedelta
@@ -193,37 +187,6 @@ def car_detail(request,id):
     car = get_object_or_404(Car,id=id)
     return render(request,'car_detail.html',{'car':car})
 
-def add_car(request):
-    if request.method == "POST":
-        name = request.POST.get('name')
-        brand = request.POST.get('brand')
-        number = request.POST.get('number')
-        mileage = request.POST.get('mileage')
-        fuel_type = request.POST.get('fuel_type')
-        price = request.POST.get('price')
-        image = request.FILES.get('image')
-
-        car = Car.objects.create(
-            name=name,
-            brand=brand,
-            number=number,
-            mileage=mileage,
-            fuel_type=fuel_type,
-            price=price,
-            image=image,
-        )
-
-        create_notification(
-            request.user,
-            f"{car.name} added successfully 🚗",
-            "success"
-        )
-
-        return redirect('cars')
-
-    return render(request, 'add_car.html')
-
-
 
 def buy_car(request, id):
     car = get_object_or_404(Car, id=id)
@@ -353,6 +316,7 @@ def testdrive(request):
 
     if request.method == "POST":
         car_id = request.POST.get('car')
+        pickup_location = request.POST.get('location')
         date = request.POST.get('date')
         time = request.POST.get('time')
 
@@ -362,8 +326,14 @@ def testdrive(request):
         TestDrive.objects.create(
             user=request.user,
             car=car,
+            pickup_location=pickup_location,
             date=date,
             time=time
+        )
+        create_notification(
+            request.user,
+            f"{car.name} added successfully 🚗",
+            "success"
         )
 
         # EMAIL SEND
@@ -374,6 +344,7 @@ def testdrive(request):
         html_content = render_to_string('testdrive_email.html', {
             'user': request.user,
             'car': car,
+            'pickup_location': pickup_location,
             'date': date,
             'time': time
         })
