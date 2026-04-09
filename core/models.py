@@ -100,6 +100,7 @@ class Car(models.Model):
 class TestDrive(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100,null=True,blank=True)
     pickup_location = models.CharField(max_length=255,null=True,blank=True)
     date = models.DateField()
     time = models.TimeField()

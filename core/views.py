@@ -178,11 +178,6 @@ def cars(request):
     })
 
 
-def delete_car(request, id):
-    car = get_object_or_404(Car, id=id)
-    car.delete()
-    return redirect('cars')
-
 def car_detail(request,id):
     car = get_object_or_404(Car,id=id)
     return render(request,'car_detail.html',{'car':car})
@@ -316,6 +311,7 @@ def testdrive(request):
 
     if request.method == "POST":
         car_id = request.POST.get('car')
+        name = request.POST.get('name')
         pickup_location = request.POST.get('location')
         date = request.POST.get('date')
         time = request.POST.get('time')
@@ -343,6 +339,7 @@ def testdrive(request):
 
         html_content = render_to_string('testdrive_email.html', {
             'user': request.user,
+            'name': name,
             'car': car,
             'pickup_location': pickup_location,
             'date': date,
