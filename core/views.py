@@ -453,7 +453,7 @@ def insurance_page(request, car_id):
 def buy_insurance(request, car_id):
     if request.method == "POST":
         plan = request.POST.get('plan')
-        amount = int(request.POST.get('amount')) * 100
+        amount = int(request.POST.get('amount')) *100
 
         client = razorpay.Client(auth=("rzp_test_SRMYrgg9z1ynoY", "H8Fzo9bxZA2Kh5LmFFiToIb3"))
 
