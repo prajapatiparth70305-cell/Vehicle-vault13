@@ -90,13 +90,13 @@ Vehicle-vault13-main/
 
 1️⃣ Clone the Repository
 
-git clone https://github.com/your-username/Vehicle-vault13.git
-cd Vehiclevault
+-git clone https://github.com/your-username/Vehicle-vault13.git
+-cd Vehiclevault
 
 2️⃣ Create Virtual Environment
 
-python -m venv venv
-venv\Scripts\activate   # Windows
+-python -m venv venv
+-venv\Scripts\activate   # Windows
 
 3️⃣ Install Dependencies
 
@@ -104,8 +104,8 @@ pip install -r requirements.txt
 
 4️⃣ Run Migrations
 
-python manage.py makemigrations
-python manage.py migrate
+-python manage.py makemigrations
+-python manage.py migrate
 
 5️⃣ Run Server
 
