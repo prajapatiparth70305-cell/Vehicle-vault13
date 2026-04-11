@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
 
     path('', views.home, name='home'),
+    path('aboutus/', views.aboutus, name='aboutus'),
+    path('profile/', views.profile, name='profile'),
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
     path('signup/', views.signup, name='signup'),
     path('verify_otp/', views.verify_otp, name='verify_otp'),
     path('login/', views.login_view, name='login'),
@@ -39,6 +42,7 @@ urlpatterns = [
     path('delete-history/<int:id>/', views.delete_history,name='delete_history'),
     path('view-history/<int:id>/', views.view_history, name='view_history'),
     path('next-emi/<int:id>/', views.next_emi, name='next_emi'),
+    path('about/', views.about, name='about'),
     
 ] 
 

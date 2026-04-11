@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - Vehicle Vault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            min-height: 100vh;
+            color: #e0e7ff;
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white !important;
+            transition: 0.3s;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: white !important;
+            margin: 0 10px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+
+        /* ============ MAIN CONTAINER ============ */
+        .main-container {
+            padding: 40px 0;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* ============ PAGE HEADER ============ */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: #b0b0c3;
+            font-size: 1.05rem;
+        }
+
+        /* ============ FORM CARD ============ */
+        .form-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-card:hover {
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.1);
+        }
+
+        /* ============ FORM GROUPS ============ */
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e0e7ff;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section h3 i {
+            color: #667eea;
+        }
+
+        /* ============ FORM INPUTS ============ */
+        .form-label {
+            color: #e0e7ff;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(15, 23, 42, 0.4) !important;
+            border: 2px solid rgba(102, 126, 234, 0.3) !important;
+            color: #e0e7ff !important;
+            padding: 12px 15px !important;
+            border-radius: 10px !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .form-control::placeholder {
+            color: #8a8fa3 !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(102, 126, 234, 0.1) !important;
+            border-color: rgba(102, 126, 234, 0.8) !important;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2) !important;
+            color: #e0e7ff !important;
+        }
+
+        .form-select option {
+            background: #1a1f2e;
+            color: #e0e7ff;
+        }
+
+        /* ============ FORM ROW ============ */
+        .form-row-custom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-row-custom.full {
+            grid-template-columns: 1fr;
+        }
+
+        /* ============ BUTTONS ============ */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn-save {
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-cancel {
+            padding: 12px 35px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-3px);
+            color: #667eea;
+        }
+
+        /* ============ ERROR MESSAGES ============ */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message i {
+            font-size: 1.2rem;
+        }
+
+        /* ============ SUCCESS MESSAGES ============ */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            color: #86efac;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message i {
+            font-size: 1.2rem;
+        }
+
+        /* ============ HELPER TEXT ============ */
+        .helper-text {
+            color: #8a8fa3;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* ============ SIDEBAR ============ */
+        .sidebar {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .profile-nav-link {
+            display: block;
+            padding: 12px 20px;
+            color: #b0b0c3;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .profile-nav-link:hover,
+        .profile-nav-link.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            background: linear-gradient(135deg, #0a0d15 0%, #1a1f2e 100%);
+            color: #b0b0c3;
+            padding: 40px 0 20px 0;
+            border-top: 2px solid rgba(102, 126, 234, 0.3);
+            margin-top: 60px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+            color: #8a8fa3;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .form-row-custom {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn-save,
+            .btn-cancel {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .sidebar {
+                margin-bottom: 30px;
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+<!-- PAGE HEADER -->
+<div class="main-container">
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-user-edit"></i> Edit Your Profile</h1>
+            <p>Update your personal information and keep your profile up to date</p>
+        </div>
+
+        <div class="row justify-content-center">
+        
+
+            <!-- FORM CONTENT -->
+            <div class="col-lg-8 col-md-10">
+                <div class="form-card">
+                    {% if messages %}
+                        {% for message in messages %}
+                            {% if message.tags == 'success' %}
+                            <div class="success-message">
+                                <i class="fas fa-check-circle"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                            {% elif message.tags == 'error' %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>{{ message }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" action="/core/edit-profile/" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-user"></i> Personal Information
+                            </h3>
+
+                            <div class="form-row-custom">
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-font"></i> First Name
+                                    </label>
+                                    <input type="text" class="form-control" name="firstname" 
+                                           value="{{ user.firstname }}" placeholder="Enter your first name" required>
+                                </div>
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-font"></i> Last Name
+                                    </label>
+                                    <input type="text" class="form-control" name="lastname" 
+                                           value="{{ user.lastname }}" placeholder="Enter your last name" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row-custom">
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-venus-mars"></i> Gender
+                                    </label>
+                                    <select class="form-select" name="gender" required>
+                                        <option value="">-- Select Gender --</option>
+                                        <option value="male" {% if user.gender == 'male' %}selected{% endif %}>Male</option>
+                                        <option value="female" {% if user.gender == 'female' %}selected{% endif %}>Female</option>
+                                        <option value="other" {% if user.gender == 'other' %}selected{% endif %}>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-phone"></i> Mobile Number
+                                    </label>
+                                    <input type="tel" class="form-control" name="mobile"
+                                           value="{{ user.mobile }}" placeholder="Enter your mobile number" pattern="[0-9]{10}">
+                                    <div class="helper-text">Format: 10 digits (e.g., 9876543210)</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row-custom">
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-calendar-alt"></i> Date of Birth
+                                    </label>
+                                    <input type="date" class="form-control" name="date_of_birth"
+                                           value="{% if user.date_of_birth %}{{ user.date_of_birth|date:'Y-m-d' }}{% endif %}" placeholder="Enter your date of birth">
+                                </div>
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-map-marker-alt"></i> Address
+                                    </label>
+                                    <textarea class="form-control" name="address" rows="3"
+                                              placeholder="Enter your full address">{{ user.address }}</textarea>
+                                </div>
+                            </div>
+
+                        <!-- Contact Information Section -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-envelope"></i> Contact Information
+                            </h3>
+
+                            <div class="form-row-custom full">
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-envelope"></i> Email Address
+                                    </label>
+                                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                                    <div class="helper-text">
+                                        <i class="fas fa-lock"></i> Email cannot be changed
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Information Section -->
+                        <div class="form-section">
+                            <h3>
+                                <i class="fas fa-shield-alt"></i> Account Information
+                            </h3>
+
+                            <div class="form-row-custom">
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-calendar-check"></i> Member Since
+                                    </label>
+                                    <input type="text" class="form-control" value="{{ user.created_at|date:'d M Y' }}" disabled>
+                                </div>
+                                <div>
+                                    <label class="form-label">
+                                        <i class="fas fa-check-circle"></i> Verification Status
+                                    </label>
+                                    <div style="padding: 12px 15px; border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+                                        <span style="color: #10b981; font-weight: 600;">
+                                            <i class="fas fa-check-circle"></i> Verified
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="button-group">
+                            <button type="submit" class="btn-save">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <a href="/core/profile/" class="btn-cancel">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

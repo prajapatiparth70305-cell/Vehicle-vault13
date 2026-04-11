@@ -13,7 +13,7 @@ class UserSignupForm(UserCreationForm):
     class Meta:
 
         model=User
-        fields=['email', 'password1', 'password2', 'firstname', 'lastname', 'gender', 'mobile']
+        fields=['email', 'password1', 'password2', 'firstname', 'lastname', 'gender', 'mobile', 'date_of_birth', 'address']
         widgets={
             'password1':forms.PasswordInput(),
             'password2':forms.PasswordInput(),

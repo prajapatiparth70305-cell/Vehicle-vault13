@@ -26,6 +26,47 @@ from datetime import timedelta
 def home(request):
     return render(request,'home.html')
 
+def aboutus(request):
+    return render(request,'aboutus.html')
+
+@login_required(login_url='login')
+def profile(request):
+    total_purchases = Purchase.objects.filter(user=request.user, is_insurance=False).count()
+    total_insurance = Purchase.objects.filter(user=request.user, is_insurance=True).count()
+    total_emi = EMIHistory.objects.filter(user=request.user).count()
+    unread_notifications = request.user.notifications.filter(is_read=False).count()
+    
+    return render(request, 'profile.html', {
+        'total_purchases': total_purchases,
+        'total_insurance': total_insurance,
+        'total_emi': total_emi,
+        'unread_notifications': unread_notifications,
+    })
+
+@login_required(login_url='login')
+def edit_profile(request):
+    if request.method == 'POST':
+        firstname = request.POST.get('firstname')
+        lastname = request.POST.get('lastname')
+        gender = request.POST.get('gender')
+        mobile = request.POST.get('mobile')
+        date_of_birth = request.POST.get('date_of_birth')
+        address = request.POST.get('address')
+        
+        user = request.user
+        user.firstname = firstname
+        user.lastname = lastname
+        user.gender = gender
+        user.date_of_birth = date_of_birth
+        user.address = address
+        user.mobile = mobile
+        user.save()
+        
+        messages.success(request, 'Profile updated successfully!', extra_tags='success')
+        return redirect('profile')
+    
+    return render(request, 'edit_profile.html')
+
 def signup(request):
     if request.method =="POST":
       form = UserSignupForm(request.POST or None)
@@ -617,6 +658,7 @@ def success_page(request):
 
     if payment_id:
         emi = EMIHistory.objects.create(
+            user=request.user,
             payment_id=payment_id,
             amount=amount,
             car_name=car_name,
@@ -659,12 +701,13 @@ Thank you 🚗
 
 
 def history_page(request):
-    data = EMIHistory.objects.all().order_by('-id')
+    data = EMIHistory.objects.filter(user=request.user).order_by('-id')
 
     return render(request, "emi/history.html", {"data": data})
 
 
 # DELETE
+@login_required(login_url='login')
 def delete_history(request, id):
     item = EMIHistory.objects.get(id=id)
     item.delete()
@@ -791,5 +834,10 @@ def download_invoice(request, id):
     response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="invoice_{purchase.id}.pdf"'
     return response
+
+def about(request):
+    return render(request,'about.html')
+
+
 
 

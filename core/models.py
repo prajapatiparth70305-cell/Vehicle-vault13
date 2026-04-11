@@ -44,10 +44,14 @@ class User(AbstractBaseUser):
     firstname=models.CharField(max_length=20,null=True)
     lastname=models.CharField(max_length=20,null=True)
     gender=models.CharField(max_length=10,null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
     otp = models.CharField(max_length=6, null=True, blank=True)
     is_verified = models.BooleanField(default=False)
     otp_created_at = models.DateTimeField(null=True,blank=True)
     mobile = models.CharField(max_length=15, null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
     objects = UserManager()
 
     #override userName filed
@@ -175,6 +179,7 @@ class Notification(models.Model):
  
 
 class EMIHistory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     payment_id = models.CharField(max_length=200)
     amount = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True)

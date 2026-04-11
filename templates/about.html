@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - Vehicle Vault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background: #0f1419;
+        }
+
+        /* ============ NAVBAR ============ */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white !important;
+            transition: 0.3s;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-link {
+            color: white !important;
+            margin: 0 10px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: #ffd700 !important;
+            transform: translateY(-2px);
+        }
+
+        /* ============ HERO SECTION ============ */
+        .hero {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%),
+                        url('https://images.unsplash.com/photo-1493238792000-8113da705763') center/cover;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 'radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                         radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%)';
+            animation: blob 7s infinite;
+        }
+
+        @keyframes blob {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            font-weight: 500;
+            animation: fadeInUp 1s ease-out 0.4s both;
+            color: #e0e7ff;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============ SECTIONS ============ */
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .section p {
+            color: #b0b0c3;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============ ABOUT SECTION ============ */
+        .about-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .about-content {
+            text-align: center;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ============ FEATURES SECTION ============ */
+        .features-section {
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            height: 100%;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transition: 0.3s;
+        }
+
+        .feature-card:hover::before {
+            top: 0;
+            left: 0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+        }
+
+        .feature-card .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #667eea;
+            transition: 0.3s;
+        }
+
+        .feature-card:hover .icon {
+            transform: scale(1.2) rotate(360deg);
+            color: #764ba2;
+        }
+
+        .feature-card h5 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 20px 0 15px 0;
+            color: #e0e7ff;
+        }
+
+        .feature-card p {
+            color: #b0b0c3;
+            font-size: 0.95rem;
+        }
+
+        /* ============ MISSION & VISION SECTION ============ */
+        .mission-vision-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .mission-card, .vision-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .mission-card:hover, .vision-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.2);
+        }
+
+        .mission-card .icon, .vision-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .mission-card h4, .vision-card h4 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #e0e7ff;
+        }
+
+        .mission-card p, .vision-card p {
+            color: #b0b0c3;
+            line-height: 1.8;
+        }
+
+        /* ============ TEAM SECTION ============ */
+        .team-section {
+            background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .team-member:hover {
+            transform: translateY(-15px);
+            border-color: rgba(102, 126, 234, 0.8);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .member-avatar {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .member-info {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .member-info h5 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #e0e7ff;
+        }
+
+        .member-info p {
+            color: #b0b0c3;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .member-title {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* ============ STATS SECTION ============ */
+        .stats-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 60px 0;
+            border-top: 2px solid rgba(102, 126, 234, 0.3);
+            border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #b0b0c3;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* ============ CTA SECTION ============ */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+        }
+
+        .cta-section::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            bottom: -200px;
+            left: -100px;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: #e0e7ff;
+            margin-bottom: 30px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 15px 45px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 2px solid white;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            background: transparent;
+            color: white;
+        }
+
+        /* ============ FOOTER ============ */
+        .footer {
+            background: linear-gradient(135deg, #0a0d15 0%, #1a1f2e 100%);
+            color: #b0b0c3;
+            padding: 50px 0 20px 0;
+            border-top: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .footer h5 {
+            color: #e0e7ff;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .footer a {
+            color: #b0b0c3;
+            text-decoration: none;
+            transition: 0.3s;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .footer a:hover {
+            color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+            margin-top: 30px;
+            color: #8a8fa3;
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .mission-vision-container {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card {
+                padding: 25px;
+            }
+
+            .feature-card .icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<!-- 🚗 HERO SECTION -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="container">
+            <h1 class="display-4"><i class="fas fa-crown"></i> About Vehicle Vault</h1>
+            <p class="lead">🚗 Smart, Secure & Modern Car Management System</p>
+        </div>
+    </div>
+</section>
+
+<!-- 📌 ABOUT CONTENT -->
+<section class="section about-section">
+    <div class="container">
+        <div class="about-content">
+            <h2>Who We Are</h2>
+            <p class="mt-4" style="font-size: 1.1rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Vehicle Vault is a modern, comprehensive platform that revolutionizes the automotive marketplace. 
+                We enable users to explore, buy cars, manage EMI plans, and purchase insurance seamlessly in one place. 
+                Built with cutting-edge technology and customer-first approach, we're transforming how people interact with vehicles.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- ⭐ FEATURES SECTION -->
+<section class="section features-section">
+    <div class="container">
+        <h2>Our Features</h2>
+
+        <div class="row text-center mt-5">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-car"></i></div>
+                    <h5>🚗 Car Management</h5>
+                    <p>Browse and manage your cars easily with a smart, intuitive dashboard designed for your convenience.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-credit-card"></i></div>
+                    <h5>💳 EMI System</h5>
+                    <p>Buy cars on flexible EMI plans with easy monthly payments tailored to your budget and lifestyle.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-shield-alt"></i></div>
+                    <h5>🛡️ Insurance</h5>
+                    <p>Secure your vehicle with customizable insurance plans providing comprehensive coverage and peace of mind.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row text-center mt-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-search"></i></div>
+                    <h5>🔍 Advanced Search</h5>
+                    <p>Find your perfect vehicle with our powerful search and filtering options across all categories.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-lock"></i></div>
+                    <h5>🔒 Secure Transactions</h5>
+                    <p>All transactions are protected with bank-level security and encryption for your complete safety.</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="icon"><i class="fas fa-headset"></i></div>
+                    <h5>💬 24/7 Support</h5>
+                    <p>Our dedicated customer support team is always ready to assist you with any queries or issues.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 🎯 MISSION & VISION SECTION -->
+<section class="section">
+    <div class="container">
+        <h2>Our Mission & Vision</h2>
+        <div class="mission-vision-container">
+            <div class="mission-card">
+                <div class="icon"><i class="fas fa-bullseye"></i></div>
+                <h4>Our Mission</h4>
+                <p>To revolutionize the automotive marketplace by providing a platform that is secure, transparent, and accessible to everyone. We aim to simplify vehicle transactions and build lasting relationships with our customers through innovation and integrity.</p>
+            </div>
+
+            <div class="vision-card">
+                <div class="icon"><i class="fas fa-star"></i></div>
+                <h4>Our Vision</h4>
+                <p>To become the most trusted and innovative vehicle marketplace globally, where buyers and sellers can connect with confidence. We envision a future where vehicle transactions are seamless, fair, and rewarding for all parties involved.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 📊 STATISTICS SECTION -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <p>Active Users</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-number">10K+</div>
+                    <p>Vehicles Listed</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-number">5K+</div>
+                    <p>Successful Transactions</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-number">98%</div>
+                    <p>Customer Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 👨‍💻 TEAM SECTION -->
+<section class="section team-section">
+    <div class="container">
+        <h2>Meet Our Expert Team</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="member-info">
+                    <h5>Raj Kumar</h5>
+                    <p class="member-title">Founder & CEO</p>
+                    <p>Visionary leader with 15+ years in the automotive industry</p>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <div class="member-avatar">
+                    <i class="fas fa-user-secret"></i>
+                </div>
+                <div class="member-info">
+                    <h5>Priya Singh</h5>
+                    <p class="member-title">CTO & Tech Lead</p>
+                    <p>Expert in building scalable platforms and innovative solutions</p>
+                </div>
+            </div>
+
+            <div class="team-member">
+                <div class="member-avatar">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="member-info">
+                    <h5>Aditya Verma</h5>
+                    <p class="member-title">Head of Operations</p>
+                    <p>Ensuring quality and excellence in every transaction</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 🎭 DEVELOPER SECTION -->
+<section class="section features-section">
+    <div class="container">
+        <h2>About This Project</h2>
+        <div class="about-content mt-5">
+            <p style="font-size: 1.1rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <strong>Vehicle Vault</strong> is developed as a full-stack Django application with modern UI/UX and real-world features. 
+                It includes payment integration with Razorpay, advanced EMI system, insurance management, test drive scheduling, 
+                and comprehensive vehicle comparison tools. Built with scalability and security as core priorities.
+            </p>
+            <h5 style="margin-top: 40px; color: #667eea;">🛠️ Tech Stack:</h5>
+            <p>Django | Bootstrap 5 | Python | PostgreSQL | Razorpay API | JavaScript | HTML| CSS</p>
+        </div>
+    </div>
+</section>
+
+<!-- 📞 CTA SECTION -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2><i class="fas fa-paper-plane"></i> Ready to Find Your Perfect Vehicle?</h2>
+            <p>Join thousands of satisfied customers who have already found their dream car on Vehicle Vault</p>
+            <a href="/core/cars/" class="cta-btn">
+                <i class="fas fa-car"></i> Browse Vehicles Now
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 🔗 FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <h5><i class="fas fa-car"></i> Vehicle Vault</h5>
+                <p>Your trusted platform for buying and selling vehicles with confidence and transparency.</p>
+            </div>
+
+            <div class="col-md-3">
+                <h5>Quick Links</h5>
+                <a href="/core/">Home</a>
+                <a href="/core/aboutus/">About Us</a>
+                <a href="/core/login/">Login</a>
+            </div>
+
+            <div class="col-md-3">
+                <h5>Services</h5>
+                <a>EMI Plans</a>
+                <a>Insurance</a>
+                <a>Test Drives</a>
+                <a>Vehicle Comparison</a>
+            </div>
+
+            <div class="col-md-3">
+                <h5>Contact Us</h5>
+                <p>📧 xxyz33301@gmail.com</p>
+                <p>📱 +91 9327512658</p>
+                <p>📍 India</p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Vehicle Vault | All Rights Reserved | Secure Vehicle Marketplace</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
