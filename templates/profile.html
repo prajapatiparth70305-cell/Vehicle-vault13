@@ -529,6 +529,88 @@
                         <div class="label">Notifications</div>
                     </div>
                 </div>
+
+                <!-- Purchased Cars Section -->
+                <div class="profile-card" style="margin-top: 30px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid rgba(102, 126, 234, 0.2);">
+                        <i class="fas fa-car" style="font-size: 1.5rem; color: #667eea;"></i>
+                        <h2 style="margin: 0; color: #e0e7ff; font-weight: 700;">My Purchased Cars</h2>
+                    </div>
+
+                    {% if purchased_cars %}
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                            {% for purchase in purchased_cars %}
+                                <div style="background: rgba(102, 126, 234, 0.1); border: 2px solid rgba(102, 126, 234, 0.3); border-radius: 15px; overflow: hidden; transition: all 0.3s ease; cursor: pointer;" 
+                                     onmouseover="this.style.transform='translateY(-8px)'; this.style.borderColor='rgba(102, 126, 234, 0.6)'; this.style.boxShadow='0 15px 40px rgba(102, 126, 234, 0.15)'"
+                                     onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(102, 126, 234, 0.3)'; this.style.boxShadow='none'">
+                                    
+                                    <!-- Car Image -->
+                                    {% if purchase.car.image %}
+                                        <img src="{{ purchase.car.image.url }}" alt="{{ purchase.car.name }}" style="width: 100%; height: 200px; object-fit: cover;">
+                                    {% else %}
+                                        <div style="width: 100%; height: 200px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2)); display: flex; align-items: center; justify-content: center; color: #b0b0c3;">
+                                            <i class="fas fa-car" style="font-size: 3rem;"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Car Details -->
+                                    <div style="padding: 20px;">
+                                        <h3 style="color: #e0e7ff; margin-bottom: 10px; font-weight: 700;">{{ purchase.car.name }}</h3>
+                                        
+                                        <div style="margin-bottom: 15px;">
+                                            <p style="color: #b0b0c3; font-size: 0.9rem; margin: 8px 0;">
+                                                <i class="fas fa-cubes" style="color: #667eea; width: 20px;"></i> <strong>Model:</strong> {{ purchase.car.model|default:"N/A" }}
+                                            </p>
+                                            <p style="color: #b0b0c3; font-size: 0.9rem; margin: 8px 0;">
+                                                <i class="fas fa-gas-pump" style="color: #667eea; width: 20px;"></i> <strong>Fuel:</strong> {{ purchase.car.fuel_type|upper|default:"N/A" }}
+                                            </p>
+                                            <p style="color: #b0b0c3; font-size: 0.9rem; margin: 8px 0;">
+                                                <i class="fas fa-cog" style="color: #667eea; width: 20px;"></i> <strong>Transmission:</strong> {{ purchase.car.transmission|capfirst|default:"N/A" }}
+                                            </p>
+                                            <p style="color: #b0b0c3; font-size: 0.9rem; margin: 8px 0;">
+                                                <i class="fas fa-money-bill" style="color: #667eea; width: 20px;"></i> <strong>Amount:</strong> ₹{{ purchase.amount|default:"N/A" }}
+                                            </p>
+                                            <p style="color: #b0b0c3; font-size: 0.9rem; margin: 8px 0;">
+                                                <i class="fas fa-calendar" style="color: #667eea; width: 20px;"></i> <strong>Purchased:</strong> {{ purchase.date|date:"d M Y" }}
+                                            </p>
+                                        </div>
+
+                                        <!-- Status Badge -->
+                                        <div style="margin-bottom: 15px;">
+                                            {% if purchase.status == "Paid" %}
+                                                <span style="display: inline-block; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                                                    <i class="fas fa-check-circle"></i> {{ purchase.status }}
+                                                </span>
+                                            {% else %}
+                                                <span style="display: inline-block; background: rgba(245, 158, 11, 0.2); color: #f59e0b; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                                                    <i class="fas fa-clock"></i> {{ purchase.status }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Action Button -->
+                                        <a href="{% url 'view_invoice' purchase.id %}" style="display: block; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 15px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: 0.3s;"
+                                           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 25px rgba(102, 126, 234, 0.3)'"
+                                           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                            <i class="fas fa-file-invoice"></i> View Invoice
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div style="text-align: center; padding: 40px 20px; background: rgba(102, 126, 234, 0.05); border-radius: 15px;">
+                            <i class="fas fa-inbox" style="font-size: 3rem; color: #b0b0c3; margin-bottom: 15px; display: block;"></i>
+                            <p style="color: #b0b0c3; font-size: 1.1rem; margin: 0;">No purchased cars yet</p>
+                            <p style="color: #8a8fa3; font-size: 0.95rem; margin-top: 10px;">Start exploring and purchase your dream car today!</p>
+                            <a href="/core/cars/" style="display: inline-block; margin-top: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: 0.3s;"
+                               onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(102, 126, 234, 0.4)'"
+                               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <i class="fas fa-shopping-car"></i> Browse Cars
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

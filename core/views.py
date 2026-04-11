@@ -36,11 +36,17 @@ def profile(request):
     total_emi = EMIHistory.objects.filter(user=request.user).count()
     unread_notifications = request.user.notifications.filter(is_read=False).count()
     
+    purchased_cars = Purchase.objects.filter(
+        user=request.user,
+        is_insurance=False
+    ).select_related('car')
+    
     return render(request, 'profile.html', {
         'total_purchases': total_purchases,
         'total_insurance': total_insurance,
         'total_emi': total_emi,
         'unread_notifications': unread_notifications,
+        'purchased_cars': purchased_cars,
     })
 
 @login_required(login_url='login')
@@ -155,7 +161,14 @@ def login_view(request):
 @login_required
 def dashboard(request):
 
-    total_cars = Car.objects.count()
+   
+    purchased_car_ids = Purchase.objects.filter(
+        user=request.user,
+        is_insurance=False
+    ).values_list('car_id', flat=True)
+    
+   
+    total_cars = Car.objects.exclude(id__in=purchased_car_ids).count()
 
     purchased_cars = Purchase.objects.filter(
         user=request.user,
