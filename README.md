@@ -141,7 +141,7 @@ RAZORPAY_SECRET = "your_secret"
 - Payment Success Page
     ![alt text](<Images/Payment Success.png>)
 - Dashboard
-    ![alt text](Images/dashboard-1.png)
+    ![alt text](dashboard.png)
 
 ---
 
