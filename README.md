@@ -97,6 +97,11 @@ Vehicle-vault13-main/
 
 -python -m venv venv
 -venv\Scripts\activate   # Windows
+-pip install django
+-pip install django-crispy-forms
+-pip install crispy-bootstrap5
+-pip install reportlab
+-pip  install razorpay
 
 3️⃣ Install Dependencies
 
