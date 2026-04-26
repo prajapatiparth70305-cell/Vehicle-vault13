@@ -686,7 +686,6 @@ def success_page(request):
             "success"
         )
 
-        # EMAIL SAME रहेगा
         if request.user.is_authenticated:
             subject = "EMI Payment Successful 💳"
             message = f"""
