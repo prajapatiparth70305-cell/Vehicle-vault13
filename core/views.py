@@ -182,8 +182,8 @@ def dashboard(request):
 
     unread_count = request.user.notifications.filter(is_read=False).count()
 
-    # 🔥 EMI DASHBOARD LOGIC
-    emis = EMIHistory.objects.all()
+    
+    emis = EMIHistory.objects.filter(user=request.user)
 
     total_paid = 0
     total_due = 0
