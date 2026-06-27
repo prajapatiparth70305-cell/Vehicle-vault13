@@ -670,14 +670,19 @@ def success_page(request):
     car_name = request.session.get("car_name")
 
     if payment_id:
+        try:
+            total_emi_value = int(total_emi) if total_emi not in (None, "") else 1
+        except (TypeError, ValueError):
+            total_emi_value = 1
+
         emi = EMIHistory.objects.create(
             user=request.user,
             payment_id=payment_id,
             amount=amount,
             car_name=car_name,
-            total_emi=int(total_emi),
+            total_emi=total_emi_value,
             paid_emi=1,
-            next_due_date=timezone.now().date() + timedelta(days=30)  
+            next_due_date=timezone.now().date() + timedelta(days=30)
         )
 
         create_notification(
